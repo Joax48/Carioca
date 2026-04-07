@@ -8,7 +8,7 @@ import { asyncHandler, createError } from '../middleware/error.middleware.js';
 const COOKIE_OPTIONS = {
   httpOnly: true,       // JS nunca puede leer esta cookie
   secure:   process.env.NODE_ENV === 'production',  // solo HTTPS en prod
-  sameSite: 'strict',
+  sameSite: "none", // mas adelante podemos ajustar a "lax" o "strict" si queremos mas seguridad, esto permite ataques csrf pero facilita el desarrollo local y el despliegue en Vercel (que usa dominios diferentes para frontend y backend)
   maxAge:   7 * 24 * 60 * 60 * 1000,  // 7 días en ms
 };
 
