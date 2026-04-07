@@ -20,12 +20,22 @@ app.use(helmet());
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ?? [];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Permitir requests sin origin (ej: Postman en dev) o de orígenes en lista
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error(`CORS: origen no permitido — ${origin}`));
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    // permitir localhost exacto
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // permitir cualquier vercel.app
+    if (origin.includes(".vercel.app")) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("No permitido por CORS"));
   },
-  credentials: true,   // necesario para cookies httpOnly
+  credentials: true
 }));
 
 // ── Parsers ──────────────────────────────────────────────
