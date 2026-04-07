@@ -1,0 +1,8 @@
+/* ─────────────────────────────────────────
+   CARIOCA — Main stylesheet entry point
+   Import order matters: tokens → global → animations
+───────────────────────────────────────── */
+
+@import './tokens.css';
+@import './global.css';
+@import './animations.css';

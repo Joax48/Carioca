@@ -1,0 +1,41 @@
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--color-espresso);
+  background: transparent;
+  border: none;
+  transition:
+    background-color var(--duration-base) var(--ease-default),
+    color            var(--duration-base) var(--ease-default);
+  flex-shrink: 0;
+}
+
+.btn:hover {
+  background-color: var(--color-espresso-06);
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* ── Dark background variant ── */
+.dark {
+  color: var(--color-gold);
+}
+.dark:hover {
+  background-color: rgba(250, 248, 245, 0.08);
+}
+
+/* ── Bordered variant (carousel arrows etc.) ── */
+.bordered {
+  border: 0.5px solid var(--color-espresso-40);
+}
+.bordered:hover {
+  border-color: var(--color-espresso);
+  background-color: var(--color-espresso-06);
+}

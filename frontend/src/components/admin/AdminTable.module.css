@@ -1,0 +1,68 @@
+
+.wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 0.5px solid var(--adm-border);
+  border-radius: 6px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--adm-font-body);
+  font-size: 13px;
+}
+
+.th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--adm-text-3);
+  background: var(--adm-surface);
+  border-bottom: 0.5px solid var(--adm-border);
+  white-space: nowrap;
+}
+
+.th:first-child { border-radius: 6px 0 0 0; }
+.th:last-child  { border-radius: 0 6px 0 0; }
+
+.tr {
+  border-bottom: 0.5px solid var(--adm-border);
+  transition: background 150ms ease;
+}
+
+.tr:last-child { border-bottom: none; }
+
+.trClickable { cursor: pointer; }
+.trClickable:hover { background: var(--adm-surface-3); }
+
+.td {
+  padding: 13px 16px;
+  color: var(--adm-text);
+  vertical-align: middle;
+}
+
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--adm-text-3);
+  font-size: 13px;
+}
+
+/* ── Skeleton ── */
+.skeletonRow { border-bottom: 0.5px solid var(--adm-border); }
+
+.skeletonCell {
+  height: 12px;
+  background: var(--adm-surface-3);
+  border-radius: 3px;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}

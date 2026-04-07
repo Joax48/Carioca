@@ -1,0 +1,112 @@
+
+.section {
+  background: var(--color-cream-warm);
+  padding: var(--section-py) var(--section-px);
+}
+
+/* ── Header row ── */
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-12);
+}
+
+.heading {
+  font-family: var(--font-body);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-espresso);
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Cards grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+/* ── Entrance animation on slide ── */
+.item {
+  animation: cardEnter var(--duration-slow) var(--ease-out) both;
+}
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Empty state ── */
+.empty {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-espresso-60);
+  padding: var(--space-12);
+}
+
+/* ── Skeleton ── */
+.skeleton {
+  background: var(--color-cream);
+  border: 0.5px solid rgba(200, 168, 130, 0.28);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7) var(--space-7) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.skeletonStars {
+  height: 16px;
+  width: 88px;
+  background: var(--color-sand);
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeletonLine {
+  height: 13px;
+  background: var(--color-sand);
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.6s ease-in-out infinite 0.1s;
+}
+
+.skeletonAuthor {
+  height: 36px;
+  width: 120px;
+  background: var(--color-sand);
+  border-radius: var(--radius-pill);
+  margin-top: var(--space-2);
+  animation: shimmer 1.6s ease-in-out infinite 0.2s;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1;   }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .item:last-child { display: none; }
+}
+
+@media (max-width: 560px) {
+  .section { padding-inline: var(--space-6); }
+  .grid { grid-template-columns: 1fr; }
+  .item:not(:first-child) { display: none; }
+  .heading { font-size: 28px; }
+}

@@ -1,0 +1,85 @@
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 200;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Drawer (slide from right) ── */
+.drawer {
+  width: 100%;
+  max-width: 520px;
+  height: 100vh;
+  background: var(--adm-surface);
+  border-left: 0.5px solid var(--adm-border);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 250ms ease;
+  overflow: hidden;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 0.5px solid var(--adm-border);
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--adm-font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--adm-text);
+}
+
+.closeBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--adm-text-3);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 150ms, background 150ms;
+}
+
+.closeBtn:hover {
+  color: var(--adm-text);
+  background: var(--adm-surface-3);
+}
+
+/* ── Body (scrollable) ── */
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--adm-border-2) transparent;
+}
+
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .drawer {
+    max-width: 100%;
+  }
+}

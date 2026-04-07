@@ -1,0 +1,156 @@
+
+.page {
+  min-height: 100vh;
+  background: #0E0D0B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: #161510;
+  border: 0.5px solid rgba(200, 168, 130, 0.12);
+  border-radius: 8px;
+  padding: 48px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── Brand ── */
+.brand {
+  text-align: center;
+}
+
+.brandSub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C8A882;
+  margin-bottom: 8px;
+}
+
+.brandName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: #F0EDE8;
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9E9890;
+}
+
+.input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #F0EDE8;
+  background: #1E1C17;
+  border: 0.5px solid rgba(200, 168, 130, 0.18);
+  border-radius: 4px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 200ms ease;
+  width: 100%;
+}
+
+.input::placeholder { color: #5E5A54; }
+
+.input:focus {
+  border-color: rgba(200, 168, 130, 0.5);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Error ── */
+.error {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #E05C5C;
+  background: rgba(224, 92, 92, 0.08);
+  border: 0.5px solid rgba(224, 92, 92, 0.2);
+  border-radius: 4px;
+  padding: 10px 14px;
+}
+
+/* ── Submit button ── */
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0E0D0B;
+  background: #C8A882;
+  border: none;
+  border-radius: 4px;
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  transition: background 200ms ease, transform 150ms ease;
+  margin-top: 4px;
+}
+
+.btn:hover:not(:disabled) {
+  background: #D4B894;
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Spinner ── */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(14, 13, 11, 0.3);
+  border-top-color: #0E0D0B;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Back link ── */
+.backLink {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #5E5A54;
+  text-align: center;
+  transition: color 200ms ease;
+}
+
+.backLink:hover { color: #9E9890; }

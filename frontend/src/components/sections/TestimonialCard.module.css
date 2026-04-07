@@ -1,0 +1,61 @@
+
+.card {
+  background: var(--color-cream);
+  border: 0.5px solid rgba(200, 168, 130, 0.28);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7) var(--space-7) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  height: 100%;
+  transition: box-shadow var(--duration-base) var(--ease-default);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Stars ── */
+.stars { /* StarRating handles its own layout */ }
+
+/* ── Quote ── */
+.quote {
+  flex: 1;
+}
+
+.text {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-espresso-80);
+}
+
+/* ── Author ── */
+.author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.name {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-espresso);
+}

@@ -1,0 +1,14 @@
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-normal);
+  padding: 4px 10px;
+  line-height: 1;
+}
+
+.gold  { background: var(--color-gold);    color: var(--color-cream); }
+.dark  { background: var(--color-espresso); color: var(--color-cream); }
+.light { background: var(--color-cream);   color: var(--color-espresso); border: var(--border-thin); }

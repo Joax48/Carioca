@@ -1,0 +1,161 @@
+
+/* ── Shell ── */
+.nav {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 100;
+  height: var(--nav-height);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding-inline: var(--section-px);
+  background: transparent;
+  transition:
+    background-color var(--duration-slow) var(--ease-default),
+    border-color     var(--duration-slow) var(--ease-default),
+    backdrop-filter  var(--duration-slow) var(--ease-default);
+}
+
+.scrolled {
+  background: rgba(250, 248, 245, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 0.5px solid rgba(200, 168, 130, 0.28);
+}
+
+/* ── Nav links (left) ── */
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.link {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);          
+  font-weight: var(--weight-medium);  
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-espresso);
+  opacity: 0.85;                      
+  transition: opacity var(--duration-base) var(--ease-default);
+}
+
+.link:hover {
+  opacity: 1;
+}
+
+/* ── Wordmark (center) ── */
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-espresso);
+  text-align: center;
+  transition: color var(--duration-base) var(--ease-default);
+  justify-self: center;
+}
+
+.wordmark:hover {
+  color: var(--color-gold-dark);
+}
+
+/* ── Actions (right) ── */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  justify-content: flex-end;
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background: var(--color-espresso-15);
+  margin-inline: var(--space-2);
+}
+
+/* ── Cart badge ── */
+.cartWrap {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--color-gold);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: var(--weight-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ── Mobile hamburger ── */
+.hamburger {
+  display: none;
+}
+
+/* ── Mobile drawer ── */
+.drawer {
+  position: fixed;
+  inset-block-start: var(--nav-height);
+  inset-inline: 0;
+  z-index: 99;
+  background: var(--color-cream);
+  border-bottom: var(--border-thin);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--duration-slow) var(--ease-out);
+}
+
+.drawerOpen {
+  max-height: 400px;
+}
+
+.drawerLinks {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6) var(--section-px);
+  gap: var(--space-6);
+}
+
+.drawerLink {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-light);
+  color: var(--color-espresso);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .nav {
+    padding-inline: var(--space-6);
+  }
+
+  .links {
+    display: none;
+  }
+
+  .hamburger {
+    display: inline-flex;
+  }
+
+  .divider,
+  .actions > *:not(.cartWrap):not(.hamburger) {
+    display: none;
+  }
+
+  .cartWrap {
+    display: flex;
+  }
+}

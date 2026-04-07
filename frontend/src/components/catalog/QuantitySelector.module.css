@@ -1,0 +1,47 @@
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  border: 0.5px solid var(--color-espresso-40);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  height: 52px;
+}
+
+.btn {
+  width: 48px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: var(--weight-light);
+  color: var(--color-espresso);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-default),
+    color            var(--duration-base) var(--ease-default);
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--color-espresso-06);
+}
+
+.btn:disabled {
+  color: var(--color-espresso-40);
+  cursor: not-allowed;
+}
+
+.value {
+  width: 48px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-espresso);
+  border-inline: 0.5px solid var(--color-espresso-15);
+  user-select: none;
+}

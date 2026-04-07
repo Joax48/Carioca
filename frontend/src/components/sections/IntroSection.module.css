@@ -1,0 +1,39 @@
+
+.section {
+  padding-block: var(--section-py);
+  padding-inline: var(--section-px);
+}
+
+.inner {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, var(--text-2xl));
+  font-weight: var(--weight-light);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-6);
+}
+
+.heading em {
+  font-style: italic;
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-espresso-60);
+  line-height: var(--leading-loose);
+  max-width: 520px;
+  margin-inline: auto;
+  margin-bottom: var(--space-10);
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding-inline: var(--space-6);
+  }
+}

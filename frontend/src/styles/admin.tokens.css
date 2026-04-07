@@ -1,0 +1,43 @@
+/* ─────────────────────────────────────────
+   Variables exclusivas del CMS admin.
+   Se cargan solo dentro de AdminLayout,
+   no afectan el storefront.
+───────────────────────────────────────── */
+
+.adminRoot {
+  /* ── Superficies ── */
+  --adm-bg:          #0E0D0B;   /* fondo base */
+  --adm-surface:     #161510;   /* panels, sidebar */
+  --adm-surface-2:   #1E1C17;   /* cards, inputs */
+  --adm-surface-3:   #252319;   /* hover states */
+  --adm-border:      rgba(200, 168, 130, 0.10);
+  --adm-border-2:    rgba(200, 168, 130, 0.18);
+
+  /* ── Texto ── */
+  --adm-text:        #F0EDE8;   /* primario */
+  --adm-text-2:      #9E9890;   /* secundario */
+  --adm-text-3:      #5E5A54;   /* hints */
+
+  /* ── Acento gold ── */
+  --adm-gold:        #C8A882;
+  --adm-gold-dim:    rgba(200, 168, 130, 0.15);
+  --adm-gold-hover:  rgba(200, 168, 130, 0.25);
+
+  /* ── Status ── */
+  --adm-green:       #4CAF7D;
+  --adm-green-bg:    rgba(76, 175, 125, 0.10);
+  --adm-amber:       #E8A33A;
+  --adm-amber-bg:    rgba(232, 163, 58, 0.10);
+  --adm-red:         #E05C5C;
+  --adm-red-bg:      rgba(224, 92, 92, 0.10);
+  --adm-blue:        #5B9BD6;
+  --adm-blue-bg:     rgba(91, 155, 214, 0.10);
+
+  /* ── Layout ── */
+  --adm-sidebar-w:   220px;
+  --adm-topbar-h:    56px;
+
+  /* ── Tipografía ── */
+  --adm-font-display: 'Cormorant Garamond', Georgia, serif;
+  --adm-font-body:    'DM Sans', system-ui, sans-serif;
+}

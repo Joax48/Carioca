@@ -1,0 +1,131 @@
+/* ─────────────────────────────────────────
+   CARIOCA — Design Tokens
+   Single source of truth for all design decisions.
+   Import this first in index.css.
+───────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+:root {
+  /* ── Palette ── */
+  --color-espresso:      #2a2118;
+  --color-espresso-80:   rgba(42, 33, 24, 0.8);
+  --color-espresso-60:   rgba(42, 33, 24, 0.6);
+  --color-espresso-40:   rgba(42, 33, 24, 0.4);
+  --color-espresso-15:   rgba(42, 33, 24, 0.15);
+  --color-espresso-06:   rgba(42, 33, 24, 0.06);
+
+  --color-gold:          #C8A882;
+  --color-gold-light:    #E3D0B8;
+  --color-gold-dark:     #9E7E56;
+
+  --color-cream:         #FAF8F5;
+  --color-cream-warm:    #F2EDE6;
+  --color-sand:          #E8E0D8;
+  --color-sand-dark:     #D4C9BE;
+
+  --color-white:         #FFFFFF;
+  --color-white-70:      rgba(250, 248, 245, 0.7);
+  --color-white-60:      rgba(250, 248, 245, 0.6);
+  --color-white-50:      rgba(250, 248, 245, 0.5);
+  --color-white-35:      rgba(250, 248, 245, 0.35);
+  --color-white-10:      rgba(250, 248, 245, 0.1);
+
+  /* ── Status colors ── */
+  --color-pending:       #EF9F27;
+  --color-pending-bg:    #FAEEDA;
+  --color-confirmed:     #378ADD;
+  --color-confirmed-bg:  #E6F1FB;
+  --color-done:          #1D9E75;
+  --color-done-bg:       #E1F5EE;
+  --color-error:         #E24B4A;
+  --color-error-bg:      #FCEBEB;
+
+  /* ── Typography ── */
+  --font-display:  'Cormorant Garamond', Georgia, serif;
+  --font-body:     'DM Sans', system-ui, sans-serif;
+
+  --text-xs:    11px;
+  --text-sm:    13px;
+  --text-base:  15px;
+  --text-md:    18px;
+  --text-lg:    24px;
+  --text-xl:    32px;
+  --text-2xl:   42px;
+  --text-3xl:   56px;
+  --text-hero:  72px;
+
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+
+  --leading-tight:  1.05;
+  --leading-snug:   1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.7;
+  --leading-loose:  1.85;
+
+  --tracking-widest: 0.2em;
+  --tracking-wide:   0.12em;
+  --tracking-normal: 0.05em;
+  --tracking-tight:  -0.02em;
+
+  /* ── Spacing ── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-28:  112px;
+
+  /* ── Borders & Radius ── */
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-pill: 999px;
+
+  --border-thin:   0.5px solid var(--color-espresso-15);
+  --border-base:   1px   solid var(--color-espresso-15);
+  --border-accent: 1.5px solid var(--color-gold);
+  --border-dark:   0.5px solid var(--color-white-10);
+
+  /* ── Shadows ── */
+  --shadow-sm:  0 2px 8px rgba(42, 33, 24, 0.06);
+  --shadow-md:  0 8px 24px rgba(42, 33, 24, 0.10);
+  --shadow-lg:  0 20px 48px rgba(42, 33, 24, 0.14);
+
+  /* ── Transitions ── */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast:   150ms;
+  --duration-base:   250ms;
+  --duration-slow:   500ms;
+  --duration-reveal: 700ms;
+
+  /* ── Layout ── */
+  --nav-height:    64px;
+  --content-max:   1280px;
+  --section-px:    48px;
+  --section-py:    100px;
+}
+
+/* ── Reduced-motion override ── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast:   0ms;
+    --duration-base:   0ms;
+    --duration-slow:   0ms;
+    --duration-reveal: 0ms;
+  }
+}

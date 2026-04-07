@@ -1,0 +1,73 @@
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Image wrapper ── */
+.imageWrap {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.image {
+  transition: transform var(--duration-slow) var(--ease-default);
+}
+
+.imageWrap:hover .image {
+  transform: scale(1.04);
+}
+
+/* ── Tag ── */
+.tag {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1;
+}
+
+/* ── Hover overlay ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(42, 33, 24, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-default);
+}
+
+.imageWrap:hover .overlay {
+  opacity: 1;
+}
+
+/* ── Info ── */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.name {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  color: var(--color-espresso);
+  transition: color var(--duration-base) var(--ease-default);
+}
+
+.name:hover {
+  color: var(--color-gold-dark);
+}
+
+.price {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: var(--weight-light);
+  color: var(--color-gold);
+}
