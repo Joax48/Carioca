@@ -60,12 +60,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  animation: imgFade 0.3s var(--ease-out);
+  animation: imgFade 0.25s var(--ease-out);
 }
 
 @keyframes imgFade {
-  from { opacity: 0; transform: scale(1.02); }
-  to   { opacity: 1; transform: scale(1);    }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ── Sin miniaturas: ocupar todo el ancho ── */

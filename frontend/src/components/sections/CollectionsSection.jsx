@@ -24,7 +24,7 @@ function useStaggeredReveal(refs) {
       return io;
     });
     return () => observers.forEach(io => io?.disconnect());
-  }, []);
+  }); // sin [] — corre después de cada render para observar refs cuando carguen los datos
 }
 
 // ── Skeleton ─────────────────────────────────────────────

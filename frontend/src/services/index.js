@@ -1,53 +1,77 @@
-// Un objeto por entidad. Importar lo que se necesite.
-
 import { api } from './api.client.js';
 
 // ── Productos ─────────────────────────────────────────────
 export const productsService = {
-  getAll: ({ collection, limit, offset, q } = {}) => {
-    const params = new URLSearchParams();
-    if (collection) params.set('collection', collection);
-    if (limit)      params.set('limit', limit);
-    if (offset)     params.set('offset', offset);
-    if (q)          params.set('q', q);
-    const qs = params.toString();
+  getAll: (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined))
+    ).toString();
     return api.get(`/products${qs ? `?${qs}` : ''}`);
+  },
+  // Admin: trae todos incluyendo inactivos
+  getAllAdmin: (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined))
+    ).toString();
+    return api.get(`/admin/products${qs ? `?${qs}` : ''}`);
   },
   getOne:   (slug)         => api.get(`/products/${slug}`),
   create:   (body)         => api.post('/admin/products', body),
   update:   (id, body)     => api.patch(`/admin/products/${id}`, body),
   remove:   (id)           => api.delete(`/admin/products/${id}`),
-  addImage: (productId, body) => api.post(`/admin/products/${productId}/images`, body),
+
+  // Imágenes — upload al backend (bypasea RLS)
+  // files: File[]
+  // meta:  [{ alt_text, color_name, color_hex, sort_order, is_primary }]
+  uploadImages: (productId, files, meta = []) => {
+    const fd = new FormData();
+    files.forEach(f => fd.append('images', f));
+    if (meta.length) fd.append('metadata', JSON.stringify(meta));
+    return api.upload(`/admin/products/${productId}/images`, fd);
+  },
+  updateImage: (imageId, body)  => api.patch(`/admin/products/images/${imageId}`, body),
+  deleteImage: (imageId)        => api.delete(`/admin/products/images/${imageId}`),
+
+  // Variantes de color
+  createVariant: (productId, body) => api.post(`/admin/products/${productId}/variants`, body),
+  updateVariant: (variantId, body) => api.patch(`/admin/products/variants/${variantId}`, body),
+  deleteVariant: (variantId)       => api.delete(`/admin/products/variants/${variantId}`),
 };
 
 // ── Colecciones ───────────────────────────────────────────
 export const collectionsService = {
-  getAll:  ()           => api.get('/collections'),
+  getAll:      ()       => api.get('/collections'),
+  // Admin: trae todas incluyendo inactivas
+  getAllAdmin:  ()       => api.get('/admin/collections'),
   getOne:  (slug)       => api.get(`/collections/${slug}`),
   create:  (body)       => api.post('/admin/collections', body),
   update:  (id, body)   => api.patch(`/admin/collections/${id}`, body),
+
+  // Upload imagen de portada al backend
+  uploadImage: (collectionId, file) => {
+    const fd = new FormData();
+    fd.append('image', file);
+    return api.upload(`/admin/collections/${collectionId}/image`, fd);
+  },
 };
 
 // ── Pedidos ───────────────────────────────────────────────
 export const ordersService = {
-  create:       (body)         => api.post('/orders', body),
-  // Admin
-  getAll:       (params = {})  => {
+  create:       (body)        => api.post('/orders', body),
+  getAll:       (params = {}) => {
     const qs = new URLSearchParams(params).toString();
     return api.get(`/admin/orders${qs ? `?${qs}` : ''}`);
   },
-  getOne:       (id)           => api.get(`/admin/orders/${id}`),
-  updateStatus: (id, body)     => api.patch(`/admin/orders/${id}/status`, body),
+  getOne:       (id)          => api.get(`/admin/orders/${id}`),
+  updateStatus: (id, body)    => api.patch(`/admin/orders/${id}/status`, body),
 };
 
 // ── Testimonios ───────────────────────────────────────────
 export const testimonialsService = {
-  getAll:   ()           => api.get('/testimonials'),
-  create:   (body)       => api.post('/testimonials', body),
-  // Admin
-  getAdmin: ()           => api.get('/admin/testimonials'),
-  approve:  (id, approved = true) =>
-    api.patch(`/admin/testimonials/${id}/approve`, { approved }),
+  getAll:   ()                      => api.get('/testimonials'),
+  create:   (body)                  => api.post('/testimonials', body),
+  getAdmin: ()                      => api.get('/admin/testimonials'),
+  approve:  (id, approved = true)   => api.patch(`/admin/testimonials/${id}/approve`, { approved }),
 };
 
 // ── Auth ──────────────────────────────────────────────────

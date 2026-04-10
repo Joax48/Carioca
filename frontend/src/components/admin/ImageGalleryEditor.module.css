@@ -1,0 +1,189 @@
+/* ImageGalleryEditor.module.css */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Drop zone ── */
+.dropzone {
+  border: 1px dashed var(--adm-border-2);
+  border-radius: 6px;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--adm-text-3);
+  transition: border-color 200ms, background 200ms;
+  text-align: center;
+}
+
+.dropzone:hover,
+.dropzone:focus-visible {
+  border-color: var(--adm-gold);
+  background: var(--adm-gold-dim);
+  color: var(--adm-text-2);
+  outline: none;
+}
+
+.dropzoneText {
+  font-family: var(--adm-font-body);
+  font-size: 13px;
+  color: var(--adm-text-2);
+}
+
+.dropzoneText span {
+  color: var(--adm-gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.dropzoneHint {
+  font-size: 11px;
+  color: var(--adm-text-3);
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+/* ── Item ── */
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Thumb ── */
+.thumb {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--adm-surface-2);
+  border: 1.5px solid transparent;
+  transition: border-color 150ms;
+}
+
+.itemPrimary .thumb {
+  border-color: var(--adm-gold);
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Thumb action buttons ── */
+.thumbActions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.thumb:hover .thumbActions {
+  opacity: 1;
+}
+
+.thumbBtn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(14, 13, 11, 0.75);
+  border: none;
+  color: var(--adm-text-2);
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+
+.thumbBtn:hover {
+  background: rgba(14, 13, 11, 0.95);
+  color: var(--adm-text);
+}
+
+.thumbBtnActive {
+  color: var(--adm-gold);
+}
+
+.thumbBtnDanger:hover {
+  color: var(--adm-red);
+}
+
+/* ── Primary badge ── */
+.primaryBadge {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  font-family: var(--adm-font-body);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--adm-gold);
+  color: #0E0D0B;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* ── Color row ── */
+.colorRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.colorSwatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 0.5px solid var(--adm-border-2);
+  flex-shrink: 0;
+}
+
+.colorSelect {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--adm-font-body);
+  font-size: 11px;
+  color: var(--adm-text);
+  background: var(--adm-surface-2);
+  border: 0.5px solid var(--adm-border);
+  border-radius: 3px;
+  padding: 4px 6px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 150ms;
+}
+
+.colorSelect:focus {
+  border-color: rgba(200, 168, 130, 0.4);
+}
+
+.colorSelect option {
+  background: #1E1C17;
+  color: #F0EDE8;
+}
+
+.noVariantsHint {
+  flex: 1;
+  font-size: 10px;
+  color: var(--adm-text-3);
+  font-style: italic;
+}

@@ -5,7 +5,6 @@ import { AdminTable }             from '../../components/admin/AdminTable';
 import { AdminModal }             from '../../components/admin/AdminModal';
 import { AdminField, AdminInput, AdminTextarea, AdminToggle } from '../../components/admin/AdminField';
 import { collectionsService }     from '../../services';
-import { uploadProductImage }     from '../../services/supabase.client';
 import styles from './AdminPage.module.css';
 
 const COLUMNS = [
@@ -71,8 +70,7 @@ export function CollectionsPage() {
   async function loadData() {
     setLoading(true);
     try {
-      // Usar service_key en backend para traer también las inactivas
-      const data = await collectionsService.getAll();
+      const data = await collectionsService.getAllAdmin();
       setCollections(data);
     } finally {
       setLoading(false);
@@ -132,25 +130,28 @@ export function CollectionsPage() {
 
     setSaving(true);
     try {
-      // Si hay imagen nueva, subirla primero
-      let imageUrl = editing?.image_url;
-      if (imageFile) {
-        const id = editing?.id ?? crypto.randomUUID();
-        imageUrl = await uploadProductImage(imageFile, `collections/${id}`);
-      }
-
-      const payload = {
-        name:        form.name.trim(),
-        slug:        form.slug.trim(),
-        description: form.description || undefined,
-        image_url:   imageUrl,
-        is_active:   form.is_active,
-      };
+      let collectionId = editing?.id;
 
       if (editing) {
-        await collectionsService.update(editing.id, payload);
+        await collectionsService.update(editing.id, {
+          name:        form.name.trim(),
+          slug:        form.slug.trim(),
+          description: form.description || undefined,
+          is_active:   form.is_active,
+        });
       } else {
-        await collectionsService.create(payload);
+        const created = await collectionsService.create({
+          name:        form.name.trim(),
+          slug:        form.slug.trim(),
+          description: form.description || undefined,
+          is_active:   form.is_active,
+        });
+        collectionId = created.id;
+      }
+
+      // Subir imagen si se seleccionó una (funciona tanto en create como en edit)
+      if (imageFile && collectionId) {
+        await collectionsService.uploadImage(collectionId, imageFile);
       }
 
       setModalOpen(false);

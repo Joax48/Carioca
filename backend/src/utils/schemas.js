@@ -19,6 +19,8 @@ export const productSchema = z.object({
   collection_id:  z.string().uuid().optional(),
   is_active:      z.boolean().optional(),
   sort_order:     z.number().int().optional(),
+  // Stock por talla: { "XS": 0, "S": 5, "M": 10, "L": 3, "XL": 0 }
+  sizes:          z.record(z.string(), z.number().int().min(0)).optional(),
 });
 
 // ── Colecciones ───────────────────────────────────────────

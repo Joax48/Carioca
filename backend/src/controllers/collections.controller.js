@@ -34,6 +34,16 @@ export const getCollection = asyncHandler(async (req, res) => {
   res.json(collection);
 });
 
+// GET /api/admin/collections — todas las colecciones (incluyendo inactivas)
+export const getAllCollectionsAdmin = asyncHandler(async (req, res) => {
+  const { data, error } = await supabase
+    .from('collections')
+    .select('id, name, slug, description, image_url, sort_order, is_active')
+    .order('sort_order');
+  if (error) throw createError(error.message, 500);
+  res.json(data ?? []);
+});
+
 // POST /api/admin/collections
 export const createCollection = asyncHandler(async (req, res) => {
   const validated = collectionSchema.parse(req.body);

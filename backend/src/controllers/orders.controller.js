@@ -1,3 +1,4 @@
+// controllers/orders.controller.js
 
 import supabase from '../config/supabase.js';
 import { orderSchema, orderStatusSchema } from '../utils/schemas.js';
@@ -42,13 +43,33 @@ export const createOrder = asyncHandler(async (req, res) => {
 
   const subtotal = items.reduce((sum, i) => sum + i.subtotal, 0);
   const shipping_cost = 0;  // TODO: calcular según zona
-  const total = subtotal + shipping_cost;
+
+  // ── Descuento automático para clientes registrados (10%) ──
+  const userId = req.user?.id ?? null;
+  let discount_pct = 0;
+  let discount_amount = 0;
+
+  if (userId) {
+    // Verificar si el usuario está en profiles (es cliente registrado)
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single();
+
+    if (profile) {
+      discount_pct    = 10;
+      discount_amount = parseFloat((subtotal * 0.10).toFixed(2));
+    }
+  }
+
+  const total = parseFloat((subtotal - discount_amount + shipping_cost).toFixed(2));
 
   // 3. Crear pedido + items en transacción
   const { data: order, error: oErr } = await supabase
     .from('orders')
     .insert({
-      user_id:          req.user?.id || null,
+      user_id:          userId,
       customer_name:    validated.customer_name,
       customer_email:   validated.customer_email,
       customer_phone:   validated.customer_phone,
@@ -57,9 +78,13 @@ export const createOrder = asyncHandler(async (req, res) => {
       notes:            validated.notes,
       sinpe_phone:      validated.sinpe_phone,
       subtotal,
+      discount_pct,
+      discount_amount,
       shipping_cost,
       total,
       status: 'pending',
+      discount_percentage: discountPercentage,
+      discount_amount:     discountAmount,
     })
     .select()
     .single();
@@ -83,7 +108,10 @@ export const createOrder = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     message: 'Pedido creado exitosamente',
-    orderId: order.id,
+    orderId:         order.id,
+    subtotal,
+    discount_pct,
+    discount_amount,
     total,
   });
 });

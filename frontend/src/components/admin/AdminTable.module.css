@@ -2,12 +2,14 @@
 .wrapper {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 0.5px solid var(--adm-border);
   border-radius: 6px;
 }
 
 .table {
   width: 100%;
+  min-width: 540px; /* evita que la tabla colapse en móvil */
   border-collapse: collapse;
   font-family: var(--adm-font-body);
   font-size: 13px;

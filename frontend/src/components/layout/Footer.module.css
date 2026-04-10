@@ -96,8 +96,10 @@
 }
 
 .contactIcon {
-  font-size: 13px;
   flex-shrink: 0;
+  color: var(--color-gold);
+  display: flex;
+  align-items: center;
 }
 
 .contactEmail {

@@ -45,7 +45,7 @@ app.use(cookieParser());
 // ── Rate limiting global ─────────────────────────────────
 app.use('/api', rateLimit({
   windowMs: 15 * 60 * 1000,   // 15 minutos
-  max: 100,
+  max: 500,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Demasiadas solicitudes. Intenta de nuevo en 15 minutos.' },

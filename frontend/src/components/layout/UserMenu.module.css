@@ -1,0 +1,287 @@
+/* UserMenu.module.css */
+
+.root {
+  position: relative;
+}
+
+/* ── Trigger ── */
+.trigger {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-espresso);
+  cursor: pointer;
+  transition: background-color var(--duration-base) var(--ease-default);
+  overflow: visible;
+}
+
+.trigger:hover {
+  background-color: var(--color-espresso-06);
+}
+
+.triggerActive {
+  color: var(--color-gold-dark);
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--color-gold);
+}
+
+.onlineDot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4CAF7D;
+  border: 1.5px solid var(--color-cream);
+}
+
+/* ── Panel ── */
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 280px;
+  background: var(--color-cream);
+  border: 0.5px solid var(--color-espresso-15);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: panelIn 180ms var(--ease-out);
+  z-index: 200;
+}
+
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Loading ── */
+.loading {
+  padding: var(--space-8);
+  display: flex;
+  justify-content: center;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-espresso-15);
+  border-top-color: var(--color-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Guest panel ── */
+.guestPanel {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.guestTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: var(--weight-light);
+  font-style: italic;
+  color: var(--color-espresso);
+}
+
+.guestSub {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-espresso-60);
+  line-height: var(--leading-relaxed);
+}
+
+.guestSub strong {
+  color: var(--color-gold-dark);
+  font-weight: var(--weight-medium);
+}
+
+/* Google button */
+.googleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-espresso);
+  background: var(--color-cream);
+  border: 0.5px solid var(--color-espresso-40);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-base) var(--ease-default),
+    background   var(--duration-base) var(--ease-default);
+  width: 100%;
+}
+
+.googleBtn:hover {
+  background: var(--color-cream-warm);
+  border-color: var(--color-espresso-60);
+}
+
+/* ── User panel ── */
+.userPanel {
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.userHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.userAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--color-gold-light);
+  flex-shrink: 0;
+}
+
+.userInitial {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-sand);
+  border: 1.5px solid var(--color-gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: var(--weight-light);
+  color: var(--color-espresso);
+  flex-shrink: 0;
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-espresso);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userEmail {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-espresso-60);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Discount badge */
+.discountBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(76, 175, 125, 0.08);
+  border: 0.5px solid rgba(76, 175, 125, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: #3B6D11;
+}
+
+/* Divider */
+.divider {
+  height: 0.5px;
+  background: var(--color-espresso-15);
+  margin-block: var(--space-1);
+}
+
+/* Menu items */
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-espresso-80);
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-base), color var(--duration-base);
+  text-decoration: none;
+}
+
+.menuItem:hover {
+  background: var(--color-espresso-06);
+  color: var(--color-espresso);
+}
+
+/* Admin link — discreto, sin destacar */
+.menuItemAdmin {
+  color: var(--color-espresso-60);
+  font-size: var(--text-xs);
+}
+
+.menuItemAdmin:hover {
+  color: var(--color-gold-dark);
+  background: rgba(200, 168, 130, 0.08);
+}
+
+/* Logout */
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-espresso-60);
+  background: none;
+  border: none;
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: color var(--duration-base), background var(--duration-base);
+}
+
+.logoutBtn:hover {
+  color: var(--color-error);
+  background: var(--color-error-bg);
+}
+
+/* ── Responsive: en móvil el panel se expande ── */
+@media (max-width: 400px) {
+  .panel {
+    width: calc(100vw - 32px);
+    right: -8px;
+  }
+}

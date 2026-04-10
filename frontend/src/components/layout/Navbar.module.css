@@ -99,6 +99,12 @@
   pointer-events: none;
 }
 
+/* ── User menu wrapper (para control mobile) ── */
+.userMenuWrap {
+  display: flex;
+  align-items: center;
+}
+
 /* ── Mobile hamburger ── */
 .hamburger {
   display: none;
@@ -139,7 +145,7 @@
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .nav {
-    padding-inline: var(--space-6);
+    padding-inline: var(--space-5);
   }
 
   .links {
@@ -148,13 +154,16 @@
 
   .hamburger {
     display: inline-flex;
+    order: 10; /* siempre al extremo derecho */
   }
 
+  /* Ocultar todo en actions salvo user menu, cart y hamburger */
   .divider,
-  .actions > *:not(.cartWrap):not(.hamburger) {
+  .actions > button:not(.hamburger) {
     display: none;
   }
 
+  .userMenuWrap,
   .cartWrap {
     display: flex;
   }

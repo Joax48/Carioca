@@ -1,69 +1,67 @@
-// Estado global del carrito con Zustand.
-// Persiste en localStorage automáticamente.
+// stores/useCart.js
+// Carrito con persistencia. Ítems identificados por (productId + size + color).
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+function makeKey(productId, size, colorName) {
+  return `${productId}__${size}__${colorName ?? ''}`;
+}
+
 export const useCart = create(
   persist(
     (set, get) => ({
-      items: [],   // [{ product, quantity }]
+      items:  [],    // [{ key, product, size, colorName, colorHex, quantity }]
+      isOpen: false,
 
-      // ── Getters ──────────────────────────────────────
-      get count() {
-        return get().items.reduce((sum, i) => sum + i.quantity, 0);
-      },
-      get total() {
-        return get().items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
-      },
+      // ── Drawer ───────────────────────────────────────
+      open()  { set({ isOpen: true });  },
+      close() { set({ isOpen: false }); },
+
 
       // ── Actions ───────────────────────────────────────
-      addItem(product, quantity = 1) {
+      addItem(product, size, colorName, colorHex, quantity = 1) {
+        const key = makeKey(product.id, size, colorName);
         set(state => {
-          const existing = state.items.find(i => i.product.id === product.id);
+          const existing = state.items.find(i => i.key === key);
           if (existing) {
             return {
               items: state.items.map(i =>
-                i.product.id === product.id
-                  ? { ...i, quantity: i.quantity + quantity }
-                  : i
+                i.key === key ? { ...i, quantity: i.quantity + quantity } : i
               ),
             };
           }
-          return { items: [...state.items, { product, quantity }] };
+          return {
+            items: [...state.items, { key, product, size, colorName, colorHex, quantity }],
+          };
         });
       },
 
-      removeItem(productId) {
+      removeItem(key) {
+        set(state => ({ items: state.items.filter(i => i.key !== key) }));
+      },
+
+      updateQuantity(key, quantity) {
+        if (quantity <= 0) { get().removeItem(key); return; }
         set(state => ({
-          items: state.items.filter(i => i.product.id !== productId),
+          items: state.items.map(i => i.key === key ? { ...i, quantity } : i),
         }));
       },
 
-      updateQuantity(productId, quantity) {
-        if (quantity <= 0) return get().removeItem(productId);
-        set(state => ({
-          items: state.items.map(i =>
-            i.product.id === productId ? { ...i, quantity } : i
-          ),
-        }));
-      },
+      clear() { set({ items: [] }); },
 
-      clear() {
-        set({ items: [] });
-      },
-
-      // Formatear items para enviar al backend
+      // Para el backend
       toOrderItems() {
         return get().items.map(i => ({
           product_id: i.product.id,
           quantity:   i.quantity,
+          size:       i.size,
+          color:      i.colorName,
         }));
       },
     }),
     {
-      name: 'carioca-cart',   // clave en localStorage
-      // Solo persistir items, no funciones
+      name: 'carioca-cart-v2',
       partialize: state => ({ items: state.items }),
     }
   )

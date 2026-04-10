@@ -14,12 +14,11 @@ import { Tag } from '../ui';
 import styles from './CatalogGrid.module.css';
 
 /* Staggered reveal para los items */
-function useGridReveal(count) {
-  const refs = Array.from({ length: count }, () => useRef(null));
+function useGridReveal() {
+  const itemsRef = useRef([]);
   useEffect(() => {
-    refs.forEach((ref, i) => {
-      const el = ref.current;
-      if (!el) return;
+    const observers = itemsRef.current.map((el, i) => {
+      if (!el) return null;
       const io = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -31,10 +30,11 @@ function useGridReveal(count) {
         { threshold: 0.08 }
       );
       io.observe(el);
-      return () => io.disconnect();
+      return io;
     });
-  }, [count]);
-  return refs;
+    return () => observers.forEach(io => io?.disconnect());
+  });
+  return itemsRef;
 }
 
 function ProductSkeleton() {
@@ -49,7 +49,7 @@ function ProductSkeleton() {
 
 export function CatalogGrid({ products = [], loading = false, columns = 3 }) {
   const SKELETON_COUNT = columns === 4 ? 8 : 6;
-  const refs = useGridReveal(products.length);
+  const refs = useGridReveal();
 
   return (
     <ul
@@ -62,7 +62,7 @@ export function CatalogGrid({ products = [], loading = false, columns = 3 }) {
             <li key={i}><ProductSkeleton /></li>
           ))
         : products.map((product, i) => (
-            <li key={product.id} ref={refs[i]} className="reveal">
+            <li key={product.id} ref={el => { refs.current[i] = el; }} className="reveal">
               <CatalogCard product={product} />
             </li>
           ))

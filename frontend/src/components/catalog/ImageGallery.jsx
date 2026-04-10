@@ -7,12 +7,19 @@
      name   — nombre del producto (alt fallback)
 ───────────────────────────────────────── */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PlaceholderImage } from '../ui';
 import styles from './ImageGallery.module.css';
 
-export function ImageGallery({ images = [], name = '' }) {
+export function ImageGallery({ images = [], name = '', activeIndex }) {
   const [active, setActive] = useState(0);
+
+  // Cuando activeIndex cambia desde afuera (ej: selector de color), saltar a esa imagen
+  useEffect(() => {
+    if (activeIndex !== undefined && activeIndex >= 0 && activeIndex < images.length) {
+      setActive(activeIndex);
+    }
+  }, [activeIndex]);
 
   /* Si no hay imágenes mostramos placeholder */
   if (images.length === 0) {

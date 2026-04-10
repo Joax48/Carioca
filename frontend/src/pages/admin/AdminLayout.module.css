@@ -218,6 +218,8 @@
   flex: 1;
   padding: 28px;
   overflow-y: auto;
+  overflow-x: hidden; /* evita que overflow-y bloquee scroll horizontal en hijos */
+  min-width: 0;       /* permite que flex item se comprima correctamente */
 }
 
 /* ── Mobile overlay ── */
@@ -241,6 +243,7 @@
 
   .main {
     margin-left: 0;
+    min-width: 0;
   }
 
   .menuToggle {
@@ -252,6 +255,6 @@
   }
 
   .content {
-    padding: 20px 16px;
+    padding: 16px 12px;
   }
 }

@@ -12,6 +12,26 @@ const SOCIAL_ICONS = {
   linktree:  IconLinktree,
 };
 
+const IconPhone = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.65A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+  </svg>
+);
+
+const IconMail = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </svg>
+);
+
+const IconPin = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+    <circle cx="12" cy="10" r="3"/>
+  </svg>
+);
+
 export function Footer() {
   return (
     <footer className={styles.footer}>
@@ -44,9 +64,9 @@ export function Footer() {
         <div>
           <p className={styles.colTitle}>Enlaces</p>
           <ul className={styles.colLinks}>
-            {FOOTER_NAV.map(label => (
+            {FOOTER_NAV.map(({ label, href }) => (
               <li key={label}>
-                <a href="#" className={styles.colLink}>{label}</a>
+                <a href={href} className={styles.colLink}>{label}</a>
               </li>
             ))}
           </ul>
@@ -57,17 +77,17 @@ export function Footer() {
           <p className={styles.colTitle}>Contacto</p>
           <ul className={styles.contactList}>
             <li>
-              <span className={styles.contactIcon} aria-hidden="true">📞</span>
+              <span className={styles.contactIcon} aria-hidden="true"><IconPhone /></span>
               <span>{CONTACT_INFO.phone}</span>
             </li>
             <li>
-              <span className={styles.contactIcon} aria-hidden="true">✉</span>
+              <span className={styles.contactIcon} aria-hidden="true"><IconMail /></span>
               <a href={`mailto:${CONTACT_INFO.email}`} className={styles.contactEmail}>
                 {CONTACT_INFO.email}
               </a>
             </li>
             <li>
-              <span className={styles.contactIcon} aria-hidden="true">📍</span>
+              <span className={styles.contactIcon} aria-hidden="true"><IconPin /></span>
               <span>{CONTACT_INFO.location}</span>
             </li>
           </ul>

@@ -51,17 +51,18 @@ export function AdminSelect({ className = '', children, ...props }) {
 
 export function AdminToggle({ label, checked, onChange }) {
   return (
-    <label className={styles.toggleLabel}>
+    <div
+      className={styles.toggleLabel}
+      role="switch"
+      aria-checked={checked}
+      tabIndex={0}
+      onClick={() => onChange?.(!checked)}
+      onKeyDown={e => (e.key === ' ' || e.key === 'Enter') && onChange?.(!checked)}
+    >
       <div className={`${styles.track} ${checked ? styles.trackOn : ''}`}>
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={e => onChange?.(e.target.checked)}
-          className={styles.toggleInput}
-        />
         <span className={styles.thumb} />
       </div>
       {label && <span className={styles.toggleText}>{label}</span>}
-    </label>
+    </div>
   );
 }

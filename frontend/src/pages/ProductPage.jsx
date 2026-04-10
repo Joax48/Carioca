@@ -4,11 +4,12 @@
    agregar al carrito y compra directa.
 ───────────────────────────────────────── */
 
-import { useState }           from 'react';
+import { useState, useMemo } from 'react';
 import { useParams }          from 'react-router-dom';
 import { Navbar, Footer }     from '../components/layout';
 import { Breadcrumb }         from '../components/catalog/Breadcrumb';
 import { ImageGallery }       from '../components/catalog/ImageGallery';
+import { ColorSwatch }        from '../components/catalog/ColorSwatch';
 import { SizeSelector, DEFAULT_SIZES } from '../components/catalog/SizeSelector';
 import { QuantitySelector }   from '../components/catalog/QuantitySelector';
 import { CatalogGrid }        from '../components/catalog/CatalogGrid';
@@ -18,16 +19,121 @@ import { useProducts }        from '../hooks/useProducts';
 import { useCart }            from '../stores/useCart';
 import styles from './ProductPage.module.css';
 
+/* ── Trust accordion ── */
+const TRUST_ITEMS = [
+  {
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+    ),
+    label: 'Pago por SINPE Móvil',
+    body: 'Realizamos el cobro por SINPE Móvil de forma rápida y segura. Te enviamos el número de teléfono al confirmar tu pedido.',
+  },
+  {
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <rect x="1" y="3" width="15" height="13"/>
+        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+        <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+    ),
+    label: 'Envíos a todo Costa Rica',
+    body: 'Enviamos a nivel nacional a través de mensajería privada. También podés recoger tu pedido en nuestra tienda física en Pozos de Santa Ana.',
+  },
+  {
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 1 0 .49-4.6"/>
+      </svg>
+    ),
+    label: 'Devoluciones en 7 días',
+    body: 'Si el producto no cumple tus expectativas, aceptamos devoluciones dentro de los 7 días posteriores a la entrega. El artículo debe estar sin usar y con etiqueta.',
+  },
+];
+
+function TrustAccordion() {
+  const [open, setOpen] = useState(null);
+  return (
+    <div className={styles.trust}>
+      {TRUST_ITEMS.map((item, i) => {
+        const isOpen = open === i;
+        return (
+          <div key={i} className={`${styles.trustItem} ${isOpen ? styles.trustItemOpen : ''}`}>
+            <button
+              className={styles.trustTrigger}
+              onClick={() => setOpen(isOpen ? null : i)}
+              aria-expanded={isOpen}
+            >
+              <span className={styles.trustIcon}>{item.icon}</span>
+              <span className={styles.trustLabel}>{item.label}</span>
+              <span className={`${styles.trustChevron} ${isOpen ? styles.trustChevronOpen : ''}`}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </span>
+            </button>
+            {isOpen && (
+              <p className={styles.trustBody}>{item.body}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ProductPage() {
   const { slug }    = useParams();
-  const addItem     = useCart(s => s.addItem);
+  const { addItem, open: openCart } = useCart();
 
   const { data: product, loading, error } = useProduct(slug);
 
-  const [selectedSize, setSelectedSize] = useState('');
-  const [quantity,     setQuantity]     = useState(1);
-  const [addedMsg,     setAddedMsg]     = useState(false);
-  const [sizeError,    setSizeError]    = useState(false);
+  const [selectedSize,  setSelectedSize]  = useState('');
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [quantity,      setQuantity]      = useState(1);
+  const [addedMsg,      setAddedMsg]      = useState(false);
+  const [sizeError,     setSizeError]     = useState(false);
+  const [colorError,    setColorError]    = useState(false);
+
+  const hasVariants = (product?.variants?.length ?? 0) > 0;
+
+  /* Variante seleccionada (para su sizes map) */
+  const selectedVariant = useMemo(() =>
+    product?.variants?.find(v => v.color_name === selectedColor) ?? null,
+    [product?.variants, selectedColor]
+  );
+
+  /* Tallas con stock: usa sizes de la variante seleccionada, o product.sizes como fallback */
+  const availableSizes = useMemo(() => {
+    const sizesMap = selectedVariant?.sizes ?? product?.sizes ?? {};
+    const hasStock = Object.keys(sizesMap).length > 0;
+    return DEFAULT_SIZES.map(s => ({
+      ...s,
+      available: hasStock ? (sizesMap[s.label] ?? 0) > 0 : true,
+    }));
+  }, [selectedVariant, product?.sizes]);
+
+  /* Stock máximo para la talla seleccionada */
+  const maxStock = useMemo(() => {
+    if (!selectedSize) return 99;
+    const sizesMap = selectedVariant?.sizes ?? product?.sizes ?? {};
+    return sizesMap[selectedSize] ?? 99;
+  }, [selectedSize, selectedVariant, product?.sizes]);
+
+  /* Índice de la primera imagen del color seleccionado */
+  const colorImageIndex = useMemo(() => {
+    if (!selectedColor || !product?.images) return undefined;
+    const idx = product.images.findIndex(img => img.color_name === selectedColor);
+    return idx >= 0 ? idx : undefined;
+  }, [product?.images, selectedColor]);
+
+  /* Color hex del seleccionado (para cart) */
+  const selectedColorHex = useMemo(() =>
+    product?.variants?.find(v => v.color_name === selectedColor)?.color_hex ?? null,
+    [product?.variants, selectedColor]
+  );
 
   /* Productos relacionados (misma colección) */
   const { data: related } = useProducts({
@@ -37,24 +143,32 @@ export function ProductPage() {
   const relatedFiltered = related.filter(p => p.slug !== slug).slice(0, 4);
 
   /* ── Handlers ── */
-  const handleAddToCart = () => {
+  function validate() {
+    let ok = true;
+    if (hasVariants && !selectedColor) {
+      setColorError(true);
+      setTimeout(() => setColorError(false), 2000);
+      ok = false;
+    }
     if (!selectedSize) {
       setSizeError(true);
       setTimeout(() => setSizeError(false), 2000);
-      return;
+      ok = false;
     }
-    addItem({ ...product, selectedSize }, quantity);
+    return ok;
+  }
+
+  const handleAddToCart = () => {
+    if (!validate()) return;
+    addItem(product, selectedSize, selectedColor, selectedColorHex, quantity);
+    openCart();
     setAddedMsg(true);
     setTimeout(() => setAddedMsg(false), 2500);
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize) {
-      setSizeError(true);
-      setTimeout(() => setSizeError(false), 2000);
-      return;
-    }
-    addItem({ ...product, selectedSize }, quantity);
+    if (!validate()) return;
+    addItem(product, selectedSize, selectedColor, selectedColorHex, quantity);
     window.location.href = '/checkout';
   };
 
@@ -62,7 +176,6 @@ export function ProductPage() {
   if (loading) return <ProductSkeleton />;
   if (error || !product) return <ProductNotFound />;
 
-  const images       = product.images ?? [];
   const hasDiscount  = Boolean(product.compare_price);
   const discount     = hasDiscount
     ? Math.round((1 - product.price / product.compare_price) * 100)
@@ -92,7 +205,7 @@ export function ProductPage() {
 
             {/* Galería */}
             <div className={styles.gallery}>
-              <ImageGallery images={images} name={product.name} />
+              <ImageGallery images={product.images ?? []} name={product.name} activeIndex={colorImageIndex} />
             </div>
 
             {/* Info del producto */}
@@ -138,10 +251,29 @@ export function ProductPage() {
 
               <div className={styles.divider} />
 
+              {/* Selector de color */}
+              {hasVariants && (
+                <>
+                  <div className={colorError ? styles.sizeErrorShake : ''}>
+                    <ColorSwatch
+                      variants={product.variants}
+                      selectedColor={selectedColor}
+                      onSelect={c => { setSelectedColor(c); setColorError(false); setSelectedSize(''); }}
+                    />
+                    {colorError && (
+                      <p className={styles.sizeErrorMsg}>
+                        Por favor seleccioná un color
+                      </p>
+                    )}
+                  </div>
+                  <div className={styles.divider} />
+                </>
+              )}
+
               {/* Selector de talla */}
               <div className={sizeError ? styles.sizeErrorShake : ''}>
                 <SizeSelector
-                  sizes={DEFAULT_SIZES}
+                  sizes={availableSizes}
                   selected={selectedSize}
                   onSelect={size => { setSelectedSize(size); setSizeError(false); }}
                 />
@@ -159,6 +291,7 @@ export function ProductPage() {
                 <span className={styles.quantityLabel}>Cantidad</span>
                 <QuantitySelector
                   value={quantity}
+                  max={maxStock}
                   onChange={setQuantity}
                 />
               </div>
@@ -185,20 +318,7 @@ export function ProductPage() {
               </div>
 
               {/* Trust signals */}
-              <ul className={styles.trust}>
-                <li className={styles.trustItem}>
-                  <span className={styles.trustIcon}>✦</span>
-                  Pago por SINPE Móvil
-                </li>
-                <li className={styles.trustItem}>
-                  <span className={styles.trustIcon}>✦</span>
-                  Envíos a todo Costa Rica
-                </li>
-                <li className={styles.trustItem}>
-                  <span className={styles.trustIcon}>✦</span>
-                  Devoluciones en 7 días
-                </li>
-              </ul>
+              <TrustAccordion />
 
             </div>
           </div>

@@ -6,6 +6,8 @@
 
 import { useState } from 'react';
 import { useNavScroll } from '../../hooks/useNavScroll';
+import { UserMenu }    from './UserMenu';
+import { useCart }     from '../../stores/useCart';
 import { NAV_LINKS, SOCIAL_LINKS } from '../../data/homeData';
 import {
   IconButton,
@@ -26,9 +28,11 @@ const SOCIAL_ICONS = {
   linktree:  IconLinktree,
 };
 
-export function Navbar({ cartCount = 0 }) {
+export function Navbar() {
   const scrolled  = useNavScroll(40);
   const [open, setOpen] = useState(false);
+  const { items, open: openCart } = useCart();
+  const cartCount = items.reduce((s, i) => s + i.quantity, 0);
 
   return (
     <>
@@ -63,16 +67,16 @@ export function Navbar({ cartCount = 0 }) {
           <div className={styles.divider} />
 
           {/* Utility icons */}
-          <IconButton label="Buscar">
+          <IconButton label="Buscar" className={styles.searchBtn}>
             <IconSearch size={17} />
           </IconButton>
-          <IconButton label="Mi cuenta">
-            <IconUser size={17} />
-          </IconButton>
+          <div className={styles.userMenuWrap}>
+            <UserMenu />
+          </div>
 
           {/* Cart with badge */}
           <div className={styles.cartWrap}>
-            <IconButton label={`Carrito — ${cartCount} artículos`}>
+            <IconButton label={`Carrito — ${cartCount} artículos`} onClick={openCart}>
               <IconBag size={17} />
             </IconButton>
             {cartCount > 0 && (
