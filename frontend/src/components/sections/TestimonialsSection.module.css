@@ -1,7 +1,12 @@
 
 .section {
   background: var(--color-cream-warm);
-  padding: var(--section-py) var(--section-px);
+  padding-block: var(--section-py);
+}
+
+.inner {
+  max-width: 960px;
+  padding-inline: var(--section-px);
 }
 
 /* ── Header row ── */

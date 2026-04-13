@@ -36,41 +36,42 @@ export function TestimonialsSection() {
 
   return (
     <section className={styles.section} aria-label="Testimonios de clientes">
+      <div className={styles.inner}>
 
-      <div ref={headerRef} className={`reveal ${styles.header}`}>
-        <h2 className={styles.heading}>TESTIMONIOS</h2>
+        <div ref={headerRef} className={`reveal ${styles.header}`}>
+          <h2 className={styles.heading}>TESTIMONIOS</h2>
 
-        {!loading && total > VISIBLE && (
-          <div className={styles.nav} aria-label="Navegación del carrusel">
-            <IconButton label="Anterior" bordered onClick={prev}
-              disabled={!canPrev} className={!canPrev ? styles.disabled : ''}>
-              <IconChevronLeft size={14} />
-            </IconButton>
-            <IconButton label="Siguiente" bordered onClick={next}
-              disabled={!canNext} className={!canNext ? styles.disabled : ''}>
-              <IconChevronRight size={14} />
-            </IconButton>
-          </div>
+          {!loading && total > VISIBLE && (
+            <div className={styles.nav} aria-label="Navegación del carrusel">
+              <IconButton label="Anterior" bordered onClick={prev}
+                disabled={!canPrev} className={!canPrev ? styles.disabled : ''}>
+                <IconChevronLeft size={14} />
+              </IconButton>
+              <IconButton label="Siguiente" bordered onClick={next}
+                disabled={!canNext} className={!canNext ? styles.disabled : ''}>
+                <IconChevronRight size={14} />
+              </IconButton>
+            </div>
+          )}
+        </div>
+
+        <ul className={styles.grid} role="list">
+          {loading
+            ? Array.from({ length: VISIBLE }).map((_, i) => (
+                <li key={i}><TestimonialSkeleton /></li>
+              ))
+            : visible.map((t, i) => (
+                <li key={t.id} className={styles.item} style={{ animationDelay: `${i * 0.08}s` }}>
+                  <TestimonialCard testimonial={t} />
+                </li>
+              ))
+          }
+        </ul>
+
+        {!loading && total === 0 && (
+          <p className={styles.empty}>Sé la primera en dejar tu reseña ✨</p>
         )}
       </div>
-
-      <ul className={styles.grid} role="list">
-        {loading
-          ? Array.from({ length: VISIBLE }).map((_, i) => (
-              <li key={i}><TestimonialSkeleton /></li>
-            ))
-          : visible.map((t, i) => (
-              <li key={t.id} className={styles.item} style={{ animationDelay: `${i * 0.08}s` }}>
-                <TestimonialCard testimonial={t} />
-              </li>
-            ))
-        }
-      </ul>
-
-      {/* Vacío: no mostrar nada si no hay testimonios aprobados */}
-      {!loading && total === 0 && (
-        <p className={styles.empty}>Sé la primera en dejar tu reseña ✨</p>
-      )}
     </section>
   );
 }

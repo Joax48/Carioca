@@ -4,11 +4,11 @@
 ───────────────────────────────────────── */
 
 export const NAV_LINKS = [
-  { label: 'Catálogo',        href: '#catalogo'     },
+  { label: 'Catálogo',        href: '/catalogo'     },
   { label: 'Colecciones',     href: '/colecciones'  },
-  { label: 'Sobre Nosotros',  href: '#nosotros'     },
-  { label: 'Blog',            href: '#blog'         },
-  { label: 'Contacto',        href: '#contacto'     },
+  { label: 'Sobre Nosotros',  href: '/nosotros'     },
+  { label: 'Blog',            href: '/blog'         },
+  { label: 'Contacto',        href: '/contacto'     },
 ];
 
 export const SOCIAL_LINKS = [
@@ -20,9 +20,9 @@ export const SOCIAL_LINKS = [
 export const FOOTER_NAV = [
   { label: 'Productos',     href: '/catalogo'      },
   { label: 'Colecciones',   href: '/colecciones'   },
-  { label: 'Sobre Nosotros', href: '/#nosotros'    },
+  { label: 'Sobre Nosotros', href: '/nosotros'    },
   { label: 'Blog',           href: '/blog'         },
-  { label: 'Contáctanos',    href: '/#contacto'    },
+  { label: 'Contáctanos',    href: '/contacto'    },
 ];
 
 export const PRODUCTS = [

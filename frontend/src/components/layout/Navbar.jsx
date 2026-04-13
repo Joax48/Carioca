@@ -5,9 +5,10 @@
 ───────────────────────────────────────── */
 
 import { useState } from 'react';
-import { useNavScroll } from '../../hooks/useNavScroll';
-import { UserMenu }    from './UserMenu';
-import { useCart }     from '../../stores/useCart';
+import { useNavScroll }   from '../../hooks/useNavScroll';
+import { UserMenu }       from './UserMenu';
+import { SearchOverlay }  from './SearchOverlay';
+import { useCart }        from '../../stores/useCart';
 import { NAV_LINKS, SOCIAL_LINKS } from '../../data/homeData';
 import {
   IconButton,
@@ -30,7 +31,8 @@ const SOCIAL_ICONS = {
 
 export function Navbar() {
   const scrolled  = useNavScroll(40);
-  const [open, setOpen] = useState(false);
+  const [open,       setOpen]       = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { items, open: openCart } = useCart();
   const cartCount = items.reduce((s, i) => s + i.quantity, 0);
 
@@ -67,7 +69,7 @@ export function Navbar() {
           <div className={styles.divider} />
 
           {/* Utility icons */}
-          <IconButton label="Buscar" className={styles.searchBtn}>
+          <IconButton label="Buscar" className={styles.searchBtn} onClick={() => setSearchOpen(true)}>
             <IconSearch size={17} />
           </IconButton>
           <div className={styles.userMenuWrap}>
@@ -96,6 +98,9 @@ export function Navbar() {
           </IconButton>
         </div>
       </nav>
+
+      {/* ── Search overlay ── */}
+      {searchOpen && <SearchOverlay onClose={() => setSearchOpen(false)} />}
 
       {/* ── Mobile drawer ── */}
       <div className={`${styles.drawer} ${open ? styles.drawerOpen : ''}`}>

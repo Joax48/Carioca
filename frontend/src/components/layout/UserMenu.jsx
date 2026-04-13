@@ -13,8 +13,10 @@ export function UserMenu() {
   const {
     user, loading, initialized,
     loginWithGoogle, logout,
-    isAdmin, discountPct,
   } = useAuth();
+
+  const isAdmin    = user?.role === 'admin';
+  const discountPct = user?.role === 'client' ? 10 : 0;
 
   // Cerrar al click fuera
   useEffect(() => {

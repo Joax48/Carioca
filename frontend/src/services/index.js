@@ -80,3 +80,36 @@ export const authService = {
   logout: ()     => api.post('/auth/logout'),
   me:     ()     => api.get('/auth/me'),
 };
+
+// ── Blog ──────────────────────────────────────────────────
+export const blogService = {
+  getAll:   (params = {}) => {
+    const qs = new URLSearchParams(
+      Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined))
+    ).toString();
+    return api.get(`/blog${qs ? `?${qs}` : ''}`);
+  },
+  getOne:       (slug) => api.get(`/blog/${slug}`),
+  getAllAdmin:   ()     => api.get('/admin/blog'),
+  getOneAdmin:  (id)   => api.get(`/admin/blog/${id}`),
+  create:       (body) => api.post('/admin/blog', body),
+  update:       (id, body) => api.patch(`/admin/blog/${id}`, body),
+  remove:       (id)   => api.delete(`/admin/blog/${id}`),
+  uploadCover:  (id, file) => {
+    const fd = new FormData();
+    fd.append('cover', file);
+    return api.upload(`/admin/blog/${id}/cover`, fd);
+  },
+  uploadImage: (file) => {
+    const fd = new FormData();
+    fd.append('image', file);
+    return api.upload('/admin/blog/image', fd);
+  },
+};
+
+// ── Producto destacado ────────────────────────────────────
+export const settingsService = {
+  getFeatured: () => api.get('/products/featured'),
+  setFeatured: (productId) => api.patch(`/admin/products/${productId}`, { is_featured: true }),
+  clearFeatured: (productId) => api.patch(`/admin/products/${productId}`, { is_featured: false }),
+};

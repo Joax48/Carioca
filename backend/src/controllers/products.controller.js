@@ -24,7 +24,7 @@ export const getProducts = asyncHandler(async (req, res) => {
     .range(Number(offset), Number(offset) + Number(limit) - 1);
 
   if (collection) query = query.eq('collection_id', collection);
-  if (q) query = query.textSearch('fts', q, { config: 'spanish' });
+  if (q) query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
 
   const { data, error } = await query;
   if (error) throw createError(error.message, 500);
@@ -39,7 +39,7 @@ export const getProduct = asyncHandler(async (req, res) => {
       *,
       collection:collections(id, name, slug),
       images:product_images(id, url, alt_text, sort_order, color_name, color_hex, is_primary),
-      variants:product_variants(id, color_name, color_hex, sort_order, in_stock)
+      variants:product_variants(id, color_name, color_hex, sort_order, in_stock, sizes)
     `)
     .eq('slug', req.params.slug)
     .eq('is_active', true)
@@ -53,6 +53,24 @@ export const getProduct = asyncHandler(async (req, res) => {
   res.json(data);
 });
 
+// GET /api/products/featured — producto destacado del home
+export const getFeaturedProduct = asyncHandler(async (req, res) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select(`
+      id, name, slug, description, price, compare_price, tag,
+      collection:collections(id, name, slug),
+      images:product_images(id, url, alt_text, sort_order, is_primary)
+    `)
+    .eq('is_featured', true)
+    .eq('is_active', true)
+    .limit(1)
+    .single();
+
+  if (error || !data) return res.status(404).json({ error: 'No hay producto destacado' });
+  res.json(data);
+});
+
 // ── Admin CRUD ────────────────────────────────────────────
 
 // GET /api/admin/products — todos los productos (incluyendo inactivos)
@@ -62,10 +80,10 @@ export const getAllProductsAdmin = asyncHandler(async (req, res) => {
   const { data, error } = await supabase
     .from('products')
     .select(`
-      id, name, slug, description, price, compare_price, tag, sort_order, is_active, sizes,
+      id, name, slug, description, price, compare_price, tag, sort_order, is_active, is_featured, sizes,
       collection:collections(id, name, slug),
       images:product_images(id, url, alt_text, sort_order, color_name, color_hex, is_primary),
-      variants:product_variants(id, color_name, color_hex, sort_order, in_stock)
+      variants:product_variants(id, color_name, color_hex, sort_order, in_stock, sizes)
     `)
     .order('sort_order', { ascending: true })
     .range(Number(offset), Number(offset) + Number(limit) - 1);

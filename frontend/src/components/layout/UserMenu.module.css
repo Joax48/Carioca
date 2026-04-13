@@ -278,10 +278,13 @@
   background: var(--color-error-bg);
 }
 
-/* ── Responsive: en móvil el panel se expande ── */
-@media (max-width: 400px) {
+/* ── Responsive: en móvil el panel cubre casi toda la pantalla ── */
+@media (max-width: 520px) {
   .panel {
-    width: calc(100vw - 32px);
-    right: -8px;
+    position: fixed;
+    top: 60px;
+    left: 12px;
+    right: 12px;
+    width: auto;
   }
 }

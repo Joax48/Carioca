@@ -18,6 +18,7 @@ export const productSchema = z.object({
   tag:            z.string().max(20).optional(),
   collection_id:  z.string().uuid().optional(),
   is_active:      z.boolean().optional(),
+  is_featured:    z.boolean().optional(),
   sort_order:     z.number().int().optional(),
   // Stock por talla: { "XS": 0, "S": 5, "M": 10, "L": 3, "XL": 0 }
   sizes:          z.record(z.string(), z.number().int().min(0)).optional(),
@@ -37,13 +38,16 @@ export const orderSchema = z.object({
   customer_name:    z.string().min(2).max(100),
   customer_email:   z.string().email(),
   customer_phone:   z.string().min(8).max(20),
-  shipping_address: z.string().min(10),
-  city:             z.string().min(2),
+  delivery_method:  z.enum(['courier', 'pickup']).default('courier'),
+  shipping_address: z.string().min(5).optional(),
+  city:             z.string().min(2).optional(),
   notes:            z.string().max(500).optional(),
   sinpe_phone:      z.string().min(8).max(20).optional(),
   items: z.array(z.object({
     product_id: z.string().uuid(),
     quantity:   z.number().int().positive(),
+    size:       z.string().optional(),
+    color:      z.string().optional(),
   })).min(1, 'El carrito no puede estar vacío'),
 });
 

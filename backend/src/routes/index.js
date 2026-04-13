@@ -7,7 +7,7 @@ import { login, logout, me }
   from '../controllers/auth.controller.js';
 
 import {
-  getProducts, getProduct,
+  getProducts, getProduct, getFeaturedProduct,
   getAllProductsAdmin,
   createProduct, updateProduct, deleteProduct,
   uploadProductImages, deleteProductImage, updateProductImage,
@@ -27,7 +27,26 @@ import { getTestimonials, createTestimonial,
          approveTestimonial, getAllTestimonials }
   from '../controllers/testimonials.controller.js';
 
+import {
+  getPosts, getPost,
+  getAllPosts, getPostAdmin, createPost, updatePost, deletePost,
+  uploadCover, uploadContentImage,
+} from '../controllers/blog.controller.js';
+
 const router = Router();
+
+// ── Contacto ─────────────────────────────────────────────
+router.post('/contact', async (req, res, next) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    if (!name?.trim() || !email?.trim() || !message?.trim()) {
+      return res.status(400).json({ error: 'Nombre, correo y mensaje son requeridos' });
+    }
+    const { sendContactMessage } = await import('../services/email.service.js');
+    await sendContactMessage({ name, email, subject, message });
+    res.json({ ok: true });
+  } catch (err) { next(err); }
+});
 
 // ── Auth ─────────────────────────────────────────────────
 router.post('/auth/login',  login);
@@ -35,8 +54,9 @@ router.post('/auth/logout', logout);
 router.get ('/auth/me',     requireAuth, me);
 
 // ── Productos (público) ──────────────────────────────────
-router.get('/products',       getProducts);
-router.get('/products/:slug', getProduct);
+router.get('/products/featured', getFeaturedProduct);  // must come before /:slug
+router.get('/products',          getProducts);
+router.get('/products/:slug',    getProduct);
 
 // ── Colecciones (público) ─────────────────────────────────
 router.get('/collections',        getCollections);
@@ -83,5 +103,18 @@ router.patch('/admin/orders/:id/status', requireAdmin, updateOrderStatus);
 // Testimonios
 router.get  ('/admin/testimonials',             requireAdmin, getAllTestimonials);
 router.patch('/admin/testimonials/:id/approve', requireAdmin, approveTestimonial);
+
+// ── Blog (público) ────────────────────────────────────────
+router.get('/blog',       getPosts);
+router.get('/blog/:slug', getPost);
+
+// ── Blog (admin) ──────────────────────────────────────────
+router.post  ('/admin/blog/image',        requireAdmin, uploadContentImage); // antes de /:id
+router.get   ('/admin/blog',              requireAdmin, getAllPosts);
+router.get   ('/admin/blog/:id',          requireAdmin, getPostAdmin);
+router.post  ('/admin/blog',              requireAdmin, createPost);
+router.patch ('/admin/blog/:id',          requireAdmin, updatePost);
+router.delete('/admin/blog/:id',          requireAdmin, deletePost);
+router.post  ('/admin/blog/:id/cover',    requireAdmin, uploadCover);
 
 export default router;

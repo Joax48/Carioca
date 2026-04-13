@@ -1,9 +1,9 @@
 // Versión con datos reales — reemplaza la versión con datos estáticos.
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useProducts } from '../../hooks/useProducts';
-import { useCart }     from '../../stores/useCart';
 import { SectionLabel, Button, PlaceholderImage, Tag } from '../ui';
+import { QuickAddModal } from '../catalog/QuickAddModal';
 import styles from './ProductsSection.module.css';
 
 // ── Skeleton para estado de carga ────────────────────────
@@ -41,47 +41,56 @@ function useStaggeredReveal(refs) {
 
 export function ProductsSection() {
   const { data: products, loading, error } = useProducts({ limit: 4 });
-  const addItem    = useCart(s => s.addItem);
   const headerRef  = useRef(null);
   const cardRefs   = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const [quickAddProduct, setQuickAddProduct] = useState(null);
 
   useStaggeredReveal([headerRef, ...cardRefs]);
 
   return (
-    <section id="catalogo" className={styles.section} aria-label="Productos destacados">
+    <>
+      <section id="catalogo" className={styles.section} aria-label="Productos destacados">
 
-      <div ref={headerRef} className={`reveal ${styles.header}`}>
-        <SectionLabel>Lo más nuevo</SectionLabel>
-      </div>
+        <div ref={headerRef} className={`reveal ${styles.header}`}>
+          <SectionLabel>Lo más nuevo</SectionLabel>
+        </div>
 
-      {/* ── Error ── */}
-      {error && (
-        <p className={styles.errorMsg}>No se pudieron cargar los productos. Intenta de nuevo.</p>
+        {/* ── Error ── */}
+        {error && (
+          <p className={styles.errorMsg}>No se pudieron cargar los productos. Intenta de nuevo.</p>
+        )}
+
+        {/* ── Grid: skeletons mientras carga, cards cuando hay datos ── */}
+        <ul className={styles.grid} role="list">
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <li key={i}><ProductSkeleton /></li>
+              ))
+            : products.map((product, i) => (
+                <li key={product.id} ref={cardRefs[i]} className="reveal">
+                  <ProductCard
+                    product={product}
+                    onAddToCart={() => setQuickAddProduct(product)}
+                  />
+                </li>
+              ))
+          }
+        </ul>
+
+        <div className={styles.cta}>
+          <Button href="/catalogo" variant="outline">
+            Ver todos los productos
+          </Button>
+        </div>
+      </section>
+
+      {quickAddProduct && (
+        <QuickAddModal
+          product={quickAddProduct}
+          onClose={() => setQuickAddProduct(null)}
+        />
       )}
-
-      {/* ── Grid: skeletons mientras carga, cards cuando hay datos ── */}
-      <ul className={styles.grid} role="list">
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <li key={i}><ProductSkeleton /></li>
-            ))
-          : products.map((product, i) => (
-              <li key={product.id} ref={cardRefs[i]} className="reveal">
-                <ProductCard
-                  product={product}
-                  onAddToCart={() => addItem(product)}
-                />
-              </li>
-            ))
-        }
-      </ul>
-
-      <div className={styles.cta}>
-        <Button href="/catalogo" variant="outline">
-          Ver todos los productos
-        </Button>
-      </div>
-    </section>
+    </>
   );
 }
 

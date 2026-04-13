@@ -29,6 +29,14 @@ export const uploadMultiple = multer({
   limits: { fileSize: 5 * 1024 * 1024, files: 10 },
 }).array('images', 10);  // campo del form se llama "images"
 
+// Multer para portada de blog (campo "cover")
+export const uploadCoverSingle = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 },
+}).single('cover');
+
 // Wrapper async para usar con asyncHandler
 export const withUploadSingle   = (req, res) => new Promise((ok, fail) => uploadSingle(req, res, e => e ? fail(e) : ok()));
 export const withUploadMultiple = (req, res) => new Promise((ok, fail) => uploadMultiple(req, res, e => e ? fail(e) : ok()));
+export const withUploadCover    = (req, res) => new Promise((ok, fail) => uploadCoverSingle(req, res, e => e ? fail(e) : ok()));

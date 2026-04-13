@@ -6,6 +6,7 @@ import { asyncHandler, createError } from '../middleware/error.middleware.js';
 import {
   sendOrderReceived,
   sendOrderConfirmed,
+  sendOrderShipped,
   sendOrderCompleted,
 } from '../services/email.service.js';
 
@@ -37,12 +38,15 @@ export const createOrder = asyncHandler(async (req, res) => {
       product_name:  product.name,
       product_price: product.price,
       quantity:      item.quantity,
+      size:          item.size  ?? null,
+      color:         item.color ?? null,
       subtotal,
     };
   });
 
-  const subtotal = items.reduce((sum, i) => sum + i.subtotal, 0);
-  const shipping_cost = 0;  // TODO: calcular según zona
+  const subtotal        = items.reduce((sum, i) => sum + i.subtotal, 0);
+  const delivery_method = validated.delivery_method ?? 'courier';
+  const shipping_cost   = delivery_method === 'courier' ? 2500 : 0;
 
   // ── Descuento automático para clientes registrados (10%) ──
   const userId = req.user?.id ?? null;
@@ -69,22 +73,20 @@ export const createOrder = asyncHandler(async (req, res) => {
   const { data: order, error: oErr } = await supabase
     .from('orders')
     .insert({
-      user_id:          userId,
-      customer_name:    validated.customer_name,
-      customer_email:   validated.customer_email,
-      customer_phone:   validated.customer_phone,
-      shipping_address: validated.shipping_address,
-      city:             validated.city,
-      notes:            validated.notes,
-      sinpe_phone:      validated.sinpe_phone,
+      user_id:             userId,
+      customer_name:       validated.customer_name,
+      customer_email:      validated.customer_email,
+      customer_phone:      validated.customer_phone,
+      shipping_address:    validated.shipping_address ?? null,
+      city:                validated.city ?? null,
+      notes:               validated.notes ?? null,
+      sinpe_phone:         validated.sinpe_phone ?? null,
       subtotal,
-      discount_pct,
+      discount_percentage: discount_pct,
       discount_amount,
       shipping_cost,
       total,
-      status: 'pending',
-      discount_percentage: discountPercentage,
-      discount_amount:     discountAmount,
+      status:              'pending',
     })
     .select()
     .single();
@@ -98,13 +100,60 @@ export const createOrder = asyncHandler(async (req, res) => {
 
   if (iErr) throw createError(iErr.message, 500);
 
-  // 5. Enviar email de confirmación al cliente
+  // 5. Reducir stock por talla y color para cada ítem
+  for (const item of items) {
+    const { product_id, size, color, quantity } = item;
+    if (!size) continue;  // sin talla no hay nada que reducir
+
+    try {
+      if (color) {
+        // Producto con variante de color → reducir en product_variants.sizes
+        const { data: variant } = await supabase
+          .from('product_variants')
+          .select('id, sizes')
+          .eq('product_id', product_id)
+          .eq('color_name', color)
+          .single();
+
+        if (variant?.sizes) {
+          const current  = Number(variant.sizes[size] ?? 0);
+          const newStock = Math.max(0, current - quantity);
+          await supabase
+            .from('product_variants')
+            .update({ sizes: { ...variant.sizes, [size]: newStock } })
+            .eq('id', variant.id);
+        }
+      } else {
+        // Producto sin variantes → reducir en products.sizes
+        const { data: product } = await supabase
+          .from('products')
+          .select('sizes')
+          .eq('id', product_id)
+          .single();
+
+        if (product?.sizes) {
+          const current  = Number(product.sizes[size] ?? 0);
+          const newStock = Math.max(0, current - quantity);
+          await supabase
+            .from('products')
+            .update({ sizes: { ...product.sizes, [size]: newStock } })
+            .eq('id', product_id);
+        }
+      }
+    } catch (stockErr) {
+      // No bloqueamos el pedido si falla la actualización de stock
+      console.error(`Error reduciendo stock para product ${product_id} size ${size}:`, stockErr);
+    }
+  }
+
+  // 6. Enviar email de confirmación al cliente
   await sendOrderReceived({
-    to:           validated.customer_email,
-    customerName: validated.customer_name,
-    orderId:      order.id,
+    to:             validated.customer_email,
+    customerName:   validated.customer_name,
+    orderId:        order.id,
     total,
-  }).catch(console.error);  // no bloquear respuesta si falla el email
+    deliveryMethod: delivery_method,
+  }).catch(err => console.error('[Email] sendOrderReceived falló:', err.message));
 
   res.status(201).json({
     message: 'Pedido creado exitosamente',
@@ -126,7 +175,8 @@ export const getOrders = asyncHandler(async (req, res) => {
     .from('orders')
     .select(`
       id, customer_name, customer_email, customer_phone,
-      shipping_address, city, total, status,
+      shipping_address, city, subtotal, shipping_cost, discount_percentage,
+      discount_amount, total, status, delivery_method,
       sinpe_phone, sinpe_confirmed_at,
       notes, admin_notes, created_at, updated_at,
       items:order_items(product_name, product_price, quantity, subtotal)
@@ -177,10 +227,19 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   // Disparar emails según estado
   if (status === 'confirmed') {
     await sendOrderConfirmed({
+      to:             order.customer_email,
+      customerName:   order.customer_name,
+      orderId:        order.id,
+      deliveryMethod: order.delivery_method ?? 'courier',
+    }).catch(err => console.error('[Email] sendOrderConfirmed falló:', err.message));
+  }
+
+  if (status === 'shipped') {
+    await sendOrderShipped({
       to:           order.customer_email,
       customerName: order.customer_name,
       orderId:      order.id,
-    }).catch(console.error);
+    }).catch(err => console.error('[Email] sendOrderShipped falló:', err.message));
   }
 
   if (status === 'completed') {

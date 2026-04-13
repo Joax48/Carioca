@@ -1,0 +1,221 @@
+/* ── SearchOverlay ── */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(42, 33, 24, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-cream);
+  border-bottom: 1px solid var(--color-espresso-15);
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideDown 0.2s var(--ease-out, cubic-bezier(0,0,0.2,1));
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── Input row ── */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 20px var(--section-px);
+  border-bottom: 0.5px solid var(--color-espresso-15);
+  color: var(--color-espresso-40);
+}
+
+.input {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: var(--weight-light);
+  font-style: italic;
+  color: var(--color-espresso);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-espresso-30, rgba(42,33,24,0.3));
+}
+
+.clearBtn,
+.closeBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--color-espresso-40);
+  transition: color var(--duration-fast);
+}
+
+.clearBtn:hover,
+.closeBtn:hover {
+  color: var(--color-espresso);
+}
+
+.closeBtn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.1em;
+  border: 1px solid var(--color-espresso-15);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+}
+
+/* ── Results area ── */
+.results {
+  padding: var(--space-5) var(--section-px) var(--space-8);
+  overflow-y: auto;
+}
+
+.resultsLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-espresso-40);
+  margin-bottom: var(--space-4);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-fast);
+  color: inherit;
+}
+
+.item:hover {
+  background: var(--color-espresso-06);
+}
+
+.item:hover .itemName {
+  color: var(--color-gold-dark);
+}
+
+.thumb {
+  width: 52px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-sand);
+  flex-shrink: 0;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbFallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-sand), var(--color-sand-dark));
+}
+
+.itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.collection {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.itemName {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  color: var(--color-espresso);
+  transition: color var(--duration-fast);
+}
+
+.itemPrice {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-light);
+  color: var(--color-gold);
+}
+
+/* ── States ── */
+.loadingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-espresso-15);
+  border-top-color: var(--color-espresso);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loadingText {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-espresso-40);
+}
+
+.empty {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-espresso-60);
+  padding: var(--space-8) 0;
+}
+
+.empty em { color: var(--color-espresso); font-style: italic; }
+
+.hint {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-espresso-40);
+  padding: var(--space-6) 0;
+  font-style: italic;
+}

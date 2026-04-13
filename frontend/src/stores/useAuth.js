@@ -9,6 +9,7 @@ import {
   onAuthStateChange,
   checkIfAdmin,
 } from '../services/supabase.client';
+import { useCart } from './useCart';
 
 export const useAuth = create((set, get) => ({
   user:        null,
@@ -55,8 +56,9 @@ export const useAuth = create((set, get) => ({
             },
             loading: false,
           });
-          // Redirigir al panel admin solo si no estamos ya ahí
-          if (!window.location.pathname.startsWith('/admin')) {
+          // Redirigir al dashboard admin (incluso desde /admin/login)
+          const p = window.location.pathname;
+          if (!p.startsWith('/admin') || p === '/admin/login') {
             window.location.href = '/admin';
           }
           return;
@@ -98,15 +100,7 @@ export const useAuth = create((set, get) => ({
     if (user?.source === 'admin')    await authService.logout();
     if (user?.source === 'supabase') await supabaseSignOut();
     set({ user: null });
+    useCart.getState().clear();
   },
 
-  // ── Computed helpers ─────────────────────────────────────
-  get isAdmin() {
-    return get().user?.role === 'admin';
-  },
-
-  get discountPct() {
-    const u = get().user;
-    return u && u.role === 'client' ? 10 : 0;
-  },
 }));

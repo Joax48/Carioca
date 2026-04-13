@@ -9,10 +9,11 @@ import { StarRating } from '../ui';
 import styles from './TestimonialCard.module.css';
 
 export function TestimonialCard({ testimonial }) {
-  const { name, text, stars } = testimonial;
+  const { author_name, name, text, stars } = testimonial;
+  const displayName = author_name ?? name ?? '';
 
   /* Derive initials (up to 2 chars) */
-  const initials = name
+  const initials = displayName
     .split(' ')
     .map(w => w[0])
     .slice(0, 2)
@@ -32,7 +33,7 @@ export function TestimonialCard({ testimonial }) {
         <div className={styles.avatar} aria-hidden="true">
           {initials}
         </div>
-        <p className={styles.name}>{name}</p>
+        <p className={styles.name}>{displayName}</p>
       </footer>
     </article>
   );

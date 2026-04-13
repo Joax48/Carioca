@@ -16,6 +16,11 @@ import { CollectionsListPage }  from './pages/CollectionsListPage';
 import { CollectionPage }       from './pages/CollectionPage';
 import { ProductPage }          from './pages/ProductPage';
 import { CheckoutPage }         from './pages/CheckoutPage';
+import { ReviewPage }           from './pages/ReviewPage';
+import { ContactPage }          from './pages/ContactPage';
+import { ProfilePage }          from './pages/ProfilePage';
+import { BlogPage }             from './pages/BlogPage';
+import { BlogPostPage }         from './pages/BlogPostPage';
 
 // Admin CMS
 import { LoginPage }            from './pages/admin/LoginPage';
@@ -24,6 +29,7 @@ import { ProductsPage }         from './pages/admin/ProductsPage';
 import { CollectionsPage }      from './pages/admin/CollectionsPage';
 import { OrdersPage }           from './pages/admin/OrdersPage';
 import { TestimonialsPage }     from './pages/admin/TestimonialsPage';
+import { BlogAdminPage }        from './pages/admin/BlogAdminPage';
 
 export function App() {
   const initAdmin  = useAuth(s => s.init);
@@ -45,6 +51,11 @@ export function App() {
         <Route path="/colecciones/:slug" element={<CollectionPage />} />
         <Route path="/productos/:slug"   element={<ProductPage />} />
         <Route path="/checkout"          element={<CheckoutPage />} />
+        <Route path="/review/:orderId"   element={<ReviewPage />} />
+        <Route path="/contacto"          element={<ContactPage />} />
+        <Route path="/mi-cuenta"         element={<ProfilePage />} />
+        <Route path="/blog"              element={<BlogPage />} />
+        <Route path="/blog/:slug"        element={<BlogPostPage />} />
 
         {/* ── Admin CMS ── */}
         <Route path="/admin/login" element={<LoginPage />} />
@@ -56,6 +67,7 @@ export function App() {
           <Route path="productos"   element={<ProductsPage />} />
           <Route path="colecciones" element={<CollectionsPage />} />
           <Route path="testimonios" element={<TestimonialsPage />} />
+          <Route path="blog"        element={<BlogAdminPage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

@@ -9,8 +9,9 @@
      columns   — 3 | 4 (default 3)
 ───────────────────────────────────────── */
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Tag } from '../ui';
+import { QuickAddModal } from './QuickAddModal';
 import styles from './CatalogGrid.module.css';
 
 /* Staggered reveal para los items */
@@ -50,50 +51,62 @@ function ProductSkeleton() {
 export function CatalogGrid({ products = [], loading = false, columns = 3 }) {
   const SKELETON_COUNT = columns === 4 ? 8 : 6;
   const refs = useGridReveal();
+  const [quickAddProduct, setQuickAddProduct] = useState(null);
 
   return (
-    <ul
-      className={`${styles.grid} ${styles[`cols${columns}`]}`}
-      role="list"
-      aria-label="Productos"
-    >
-      {loading
-        ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-            <li key={i}><ProductSkeleton /></li>
-          ))
-        : products.map((product, i) => (
-            <li key={product.id} ref={el => { refs.current[i] = el; }} className="reveal">
-              <CatalogCard product={product} />
-            </li>
-          ))
-      }
-    </ul>
+    <>
+      <ul
+        className={`${styles.grid} ${styles[`cols${columns}`]}`}
+        role="list"
+        aria-label="Productos"
+      >
+        {loading
+          ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+              <li key={i}><ProductSkeleton /></li>
+            ))
+          : products.map((product, i) => (
+              <li key={product.id} ref={el => { refs.current[i] = el; }} className="reveal">
+                <CatalogCard product={product} onQuickAdd={() => setQuickAddProduct(product)} />
+              </li>
+            ))
+        }
+      </ul>
+
+      {quickAddProduct && (
+        <QuickAddModal
+          product={quickAddProduct}
+          onClose={() => setQuickAddProduct(null)}
+        />
+      )}
+    </>
   );
 }
 
 /* ── CatalogCard ────────────────────────────────────────── */
-function CatalogCard({ product }) {
+function CatalogCard({ product, onQuickAdd }) {
   const image = product.images?.[0];
 
   return (
     <article className={styles.card}>
-      <a
-        href={`/productos/${product.slug}`}
-        className={styles.imageWrap}
-        aria-label={`Ver ${product.name}`}
-      >
-        {/* Imagen */}
-        <div className={styles.imageContainer}>
-          {image
-            ? <img
-                src={image.url}
-                alt={image.alt_text ?? product.name}
-                className={styles.image}
-                loading="lazy"
-              />
-            : <div className={styles.imageFallback} aria-hidden="true" />
-          }
-        </div>
+      <div className={styles.imageWrap}>
+        <a
+          href={`/productos/${product.slug}`}
+          aria-label={`Ver ${product.name}`}
+          className={styles.imageLink}
+        >
+          {/* Imagen */}
+          <div className={styles.imageContainer}>
+            {image
+              ? <img
+                  src={image.url}
+                  alt={image.alt_text ?? product.name}
+                  className={styles.image}
+                  loading="lazy"
+                />
+              : <div className={styles.imageFallback} aria-hidden="true" />
+            }
+          </div>
+        </a>
 
         {/* Tag badge */}
         {product.tag && (
@@ -102,11 +115,20 @@ function CatalogCard({ product }) {
           </span>
         )}
 
-        {/* Hover quick-view overlay */}
+        {/* Hover overlay with two actions */}
         <div className={styles.overlay} aria-hidden="true">
-          <span className={styles.overlayText}>Ver producto</span>
+          <button
+            className={styles.overlayBtn}
+            onClick={e => { e.preventDefault(); onQuickAdd(); }}
+            tabIndex={-1}
+          >
+            Agregar al carrito
+          </button>
+          <a href={`/productos/${product.slug}`} className={styles.overlayLink} tabIndex={-1}>
+            Ver producto
+          </a>
         </div>
-      </a>
+      </div>
 
       {/* Info */}
       <div className={styles.info}>

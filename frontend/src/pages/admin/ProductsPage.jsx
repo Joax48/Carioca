@@ -6,7 +6,7 @@ import { AdminModal }             from "../../components/admin/AdminModal";
 import { AdminField, AdminInput, AdminTextarea, AdminSelect, AdminToggle }
   from "../../components/admin/AdminField";
 import { ImageGalleryEditor }     from "../../components/admin/ImageGalleryEditor";
-import { productsService, collectionsService } from "../../services";
+import { productsService, collectionsService, settingsService } from "../../services";
 import styles from "./AdminPage.module.css";
 
 function StatusBadge({ active }) {
@@ -61,7 +61,16 @@ const COLUMNS = [
       </div>
     ),
   },
-  { key: "name", label: "Nombre" },
+  { key: "name", label: "Nombre",
+    render: (name, row) => (
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        {row.is_featured && (
+          <span title="Producto destacado en el home" style={{ color: "var(--adm-gold)", fontSize: 11 }}>★</span>
+        )}
+        <span>{name}</span>
+      </div>
+    ),
+  },
   { key: "collection", label: "Colección",
     render: (col) => col?.name ?? <span style={{ color: "var(--adm-text-3)" }}>—</span> },
   { key: "price", label: "Precio",
@@ -71,9 +80,17 @@ const COLUMNS = [
   { key: "variants", label: "Colores", render: (v) => <ColorDots variants={v} /> },
   { key: "is_active", label: "Estado", render: (val) => <StatusBadge active={val} /> },
   {
-    key: "_actions", label: "", width: 72,
-    render: (_, row, onEdit, onDelete) => (
+    key: "_actions", label: "", width: 96,
+    render: (_, row, onEdit, onDelete, onFeature) => (
       <div className={styles.actions}>
+        <button
+          className={styles.actionBtn}
+          title={row.is_featured ? "Quitar del home" : "Mostrar en el home"}
+          onClick={e => { e.stopPropagation(); onFeature(row); }}
+          style={{ color: row.is_featured ? "var(--adm-gold)" : undefined }}
+        >
+          <IconStar filled={row.is_featured} />
+        </button>
         <button className={styles.actionBtn}
           onClick={e => { e.stopPropagation(); onEdit(row); }}><IconEdit /></button>
         <button className={styles.actionBtn}
@@ -256,10 +273,25 @@ export function ProductsPage() {
     catch (err) { console.error(err); }
   }
 
+  async function handleFeature(product) {
+    try {
+      if (product.is_featured) {
+        // Ya está destacado → quitar
+        await settingsService.clearFeatured(product.id);
+      } else {
+        // Limpiar el anterior destacado (si existe)
+        const prev = products.find(p => p.is_featured);
+        if (prev) await settingsService.clearFeatured(prev.id);
+        await settingsService.setFeatured(product.id);
+      }
+      await loadData();
+    } catch (err) { console.error(err); }
+  }
+
   const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
   const columns  = COLUMNS.map(col =>
     col.key === "_actions"
-      ? { ...col, render: (_, row) => col.render(_, row, openEdit, setDeleteTarget) }
+      ? { ...col, render: (_, row) => col.render(_, row, openEdit, setDeleteTarget, handleFeature) }
       : col
   );
 
@@ -430,3 +462,8 @@ const IconPlus   = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="n
 const IconEdit   = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>;
 const IconTrash  = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 6h18M19 6l-1 14H6L5 6M9 6V4h6v2"/></svg>;
 const IconSearch = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>;
+const IconStar   = ({ filled }) => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+  </svg>
+);
