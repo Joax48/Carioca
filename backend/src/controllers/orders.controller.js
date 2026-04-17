@@ -63,8 +63,8 @@ export const createOrder = asyncHandler(async (req, res) => {
       .single();
 
     if (profile) {
-      discount_pct    = 10;
-      discount_amount = parseFloat((subtotal * 0.10).toFixed(2));
+      discount_pct    = 5;
+      discount_amount = parseFloat((subtotal * 0.05).toFixed(2));
     }
   }
 

@@ -52,12 +52,12 @@ export const useCart = create(
 
       // Para el backend
       toOrderItems() {
-        return get().items.map(i => ({
-          product_id: i.product.id,
-          quantity:   i.quantity,
-          size:       i.size,
-          color:      i.colorName,
-        }));
+        return get().items.map(i => {
+          const item = { product_id: i.product.id, quantity: i.quantity };
+          if (i.size)      item.size  = i.size;
+          if (i.colorName) item.color = i.colorName;
+          return item;
+        });
       },
     }),
     {
