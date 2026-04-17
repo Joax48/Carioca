@@ -253,7 +253,8 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 
   if (status === 'completed') {
-    const reviewUrl = `${process.env.ALLOWED_ORIGINS.split(',')[0]}/review/${order.id}`;
+    const frontendBase = process.env.FRONTEND_URL ?? process.env.ALLOWED_ORIGINS.split(',').find(o => o.includes('vercel.app') || o.includes('carioca.cr')) ?? process.env.ALLOWED_ORIGINS.split(',')[0];
+    const reviewUrl = `${frontendBase.trim()}/review/${order.id}`;
     await sendOrderCompleted({
       to:           order.customer_email,
       customerName: order.customer_name,
