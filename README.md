@@ -2,7 +2,7 @@
 
 E-commerce completo para **Carioca Practice Wear**, una marca costarricense de ropa deportiva femenina. Incluye tienda pública, carrito, checkout con SINPE Móvil, panel de administración y blog.
 
-🌐 **Producción:** [https://carioca-five.vercel.app](https://carioca-five.vercel.app)
+**Producción:** [https://carioca-five.vercel.app](https://carioca-five.vercel.app)
 
 ---
 

@@ -16,7 +16,7 @@ export function UserMenu() {
   } = useAuth();
 
   const isAdmin    = user?.role === 'admin';
-  const discountPct = user?.role === 'client' ? 10 : 0;
+  const discountPct = user?.role === 'client' ? 5 : 0;
 
   // Cerrar al click fuera
   useEffect(() => {

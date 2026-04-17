@@ -28,23 +28,27 @@ export const useAuth = create((set, get) => ({
       // Sin sesión admin — OK
     }
 
-    // 2. Escuchar cambios de Supabase (login OAuth, logout, refresh, etc.)
+    // 2. Escuchar cambios de Supabase — mantiene loading:true hasta el primer evento
+    let firstEvent = true;
     onAuthStateChange(async (event, session) => {
       // Si ya hay admin por JWT, Supabase no lo pisa
-      if (get().user?.source === 'admin') return;
+      if (get().user?.source === 'admin') {
+        if (firstEvent) { firstEvent = false; set({ loading: false }); }
+        return;
+      }
 
       if (!session?.user) {
+        firstEvent = false;
         set({ user: null, loading: false });
         return;
       }
 
       const su = session.user;
 
-      // Solo al hacer login nuevo (no en recargas de página con sesión ya activa)
-      // verificamos si el usuario de Google es también admin en la BD
       if (event === 'SIGNED_IN') {
         const adminRole = await checkIfAdmin(su.id);
         if (adminRole) {
+          firstEvent = false;
           set({
             user: {
               id:     su.id,
@@ -56,7 +60,6 @@ export const useAuth = create((set, get) => ({
             },
             loading: false,
           });
-          // Redirigir al dashboard admin (incluso desde /admin/login)
           const p = window.location.pathname;
           if (!p.startsWith('/admin') || p === '/admin/login') {
             window.location.href = '/admin';
@@ -66,6 +69,7 @@ export const useAuth = create((set, get) => ({
       }
 
       // Usuario cliente normal (o recarga con sesión ya activa)
+      firstEvent = false;
       set({
         user: {
           id:     su.id,
@@ -79,7 +83,7 @@ export const useAuth = create((set, get) => ({
       });
     });
 
-    set({ loading: false, initialized: true });
+    set({ initialized: true }); // NO toca loading — lo maneja el callback de arriba
   },
 
   // ── Login admin (email + password) ──────────────────────
