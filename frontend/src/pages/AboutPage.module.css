@@ -1,0 +1,656 @@
+/* ─────────────────────────────────────────
+   AboutPage — Sobre Nosotros
+   Editorial luxury fashion layout
+───────────────────────────────────────── */
+
+/* ── Page shell ── */
+.page {
+  background: var(--color-cream);
+  overflow-x: hidden;
+}
+
+/* ════════════════════════════════════════════
+   1. HERO — Split layout
+════════════════════════════════════════════ */
+
+.hero {
+  display: grid;
+  grid-template-columns: 52fr 48fr;
+  height: 100svh;
+  position: relative;
+}
+
+/* ── Dark editorial panel ── */
+.heroDark {
+  background: var(--color-espresso);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  /* stack above image fade */
+  z-index: 1;
+}
+
+.heroText {
+  padding: 0 clamp(32px, 6vw, 96px) clamp(56px, 8vh, 112px);
+  padding-top: calc(80px + clamp(40px, 6vh, 80px)); /* clear navbar */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(60px, 7.5vw, 104px);
+  font-weight: 300;
+  color: var(--color-cream);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--color-gold);
+}
+
+.heroRule {
+  display: block;
+  width: 52px;
+  height: 1px;
+  background: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.heroSub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--color-gold-light);
+  letter-spacing: 0.04em;
+  line-height: var(--leading-relaxed);
+  max-width: 28ch;
+  margin: 0;
+}
+
+/* Large decorative number bottom-right of dark panel */
+.heroDecorNum {
+  position: absolute;
+  bottom: -16px;
+  right: -8px;
+  font-family: var(--font-display);
+  font-size: clamp(120px, 16vw, 220px);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.04);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Portrait image panel ── */
+.heroImageWrap {
+  position: relative;
+  overflow: hidden;
+  /* Fallback bg if image not yet added */
+  background: var(--color-espresso-80, #2A2118cc);
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
+  /* Subtle zoom-in on load */
+  animation: heroImgReveal 1.4s var(--ease-out) both;
+}
+
+@keyframes heroImgReveal {
+  from { transform: scale(1.06); opacity: 0.7; }
+  to   { transform: scale(1);    opacity: 1;   }
+}
+
+/* Left-edge gradient so dark panel bleeds into image */
+.heroImgFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-espresso) 0%,
+    rgba(42, 33, 24, 0.3) 28%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+
+/* ════════════════════════════════════════════
+   2. STORY — Brand origin narrative
+════════════════════════════════════════════ */
+
+.story {
+  background: var(--color-cream);
+  position: relative;
+  padding: clamp(80px, 12vh, 144px) clamp(24px, 8vw, 120px);
+  overflow: hidden;
+}
+
+/* Background decorative number */
+.storyDecor {
+  position: absolute;
+  top: -24px;
+  left: clamp(16px, 4vw, 56px);
+  font-family: var(--font-display);
+  font-size: clamp(160px, 22vw, 300px);
+  font-weight: 300;
+  color: var(--color-espresso);
+  opacity: 0.04;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.storyInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Story left: heading ── */
+.storyHead {
+  position: sticky;
+  top: 120px;
+}
+
+.storyHeading {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.5vw, 60px);
+  font-weight: 300;
+  color: var(--color-espresso);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: var(--space-4) 0 0;
+}
+
+.storyHeading em {
+  font-style: italic;
+  color: var(--color-gold-dark);
+}
+
+/* ── Story right: paragraphs ── */
+.storyBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-top: var(--space-2);
+}
+
+.storyBody p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-espresso-80, rgba(42,33,24,0.8));
+  line-height: var(--leading-loose, 1.85);
+  margin: 0;
+}
+
+.storyBody p em {
+  font-style: italic;
+  color: var(--color-espresso);
+  font-weight: 500;
+}
+
+/* ── Pull quote ── */
+.storyQuote {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: clamp(48px, 8vh, 96px) auto 0;
+  padding-top: clamp(32px, 5vh, 56px);
+  border-top: 1px solid var(--color-espresso-15, rgba(42,33,24,0.15));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.quote {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.5vw, 44px);
+  font-weight: 300;
+  color: var(--color-espresso);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  max-width: 680px;
+  margin: 0;
+  quotes: none;
+}
+
+.quote em {
+  font-style: italic;
+  color: var(--color-gold-dark);
+}
+
+.quoteCite {
+  display: block;
+  margin-top: var(--space-5);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  font-style: normal;
+}
+
+
+/* ════════════════════════════════════════════
+   3. STATEMENT — Full-bleed manifesto
+════════════════════════════════════════════ */
+
+.statement {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Background image layer */
+.statementBg {
+  position: absolute;
+  inset: 0;
+}
+
+.statementImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  /* No JS parallax — will-change omitted intentionally */
+}
+
+.statementOverlay {
+  position: absolute;
+  inset: 0;
+  /* Cinematic gradient: darker at top & bottom, lighter in middle */
+  background: linear-gradient(
+    180deg,
+    rgba(42, 33, 24, 0.82) 0%,
+    rgba(42, 33, 24, 0.58) 40%,
+    rgba(42, 33, 24, 0.62) 65%,
+    rgba(42, 33, 24, 0.88) 100%
+  );
+}
+
+/* Foreground text */
+.statementContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: clamp(40px, 8vh, 80px) clamp(24px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.statementEyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin: 0;
+}
+
+.statementWord {
+  font-family: var(--font-display);
+  font-size: clamp(72px, 13vw, 168px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-cream);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin: 0;
+  /* Subtle text shadow for legibility */
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.35);
+}
+
+.statementTagline {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--color-white-70);
+  line-height: var(--leading-relaxed, 1.7);
+  max-width: 44ch;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+
+/* ════════════════════════════════════════════
+   4. VALUES — Propósito · Misión · Visión
+════════════════════════════════════════════ */
+
+.values {
+  background: var(--color-cream-warm, #F2EDE6);
+  position: relative;
+  padding: clamp(80px, 12vh, 144px) clamp(24px, 8vw, 120px);
+  overflow: hidden;
+}
+
+.valuesDecor {
+  position: absolute;
+  bottom: -32px;
+  right: clamp(16px, 4vw, 48px);
+  font-family: var(--font-display);
+  font-size: clamp(160px, 22vw, 300px);
+  font-weight: 300;
+  color: var(--color-espresso);
+  opacity: 0.04;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.valuesHeader {
+  max-width: 1200px;
+  margin: 0 auto var(--space-16);
+  position: relative;
+  z-index: 1;
+}
+
+.valuesHeading {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 300;
+  color: var(--color-espresso);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  margin: var(--space-4) 0 0;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.valueCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: clamp(28px, 4vw, 44px) clamp(24px, 3vw, 36px) clamp(28px, 4vw, 44px);
+  background: var(--color-cream);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: 0 2px 24px rgba(42, 33, 24, 0.06);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--duration-normal, 300ms) var(--ease-out),
+              box-shadow var(--duration-normal, 300ms) var(--ease-out);
+}
+
+.valueCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(42, 33, 24, 0.12);
+}
+
+/* Decorative roman numeral */
+.valueNum {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  font-family: var(--font-display);
+  font-size: 80px;
+  font-weight: 300;
+  color: var(--color-espresso);
+  opacity: 0.04;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Gold accent line */
+.valueAccent {
+  width: 36px;
+  height: 2px;
+  background: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.valueLabel {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+  margin: 0;
+}
+
+.valueHeading {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.5vw, 32px);
+  font-weight: 400;
+  color: var(--color-espresso);
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.valueBody {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-espresso-60, rgba(42,33,24,0.6));
+  line-height: var(--leading-loose, 1.85);
+  margin: 0;
+}
+
+
+/* ════════════════════════════════════════════
+   5. CTA — Espresso dark invitation
+════════════════════════════════════════════ */
+
+.cta {
+  background: var(--color-espresso);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 100%,
+    rgba(200, 168, 130, 0.12) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.ctaInner {
+  position: relative;
+  z-index: 1;
+  padding: clamp(80px, 14vh, 144px) clamp(24px, 8vw, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-5);
+}
+
+.ctaHeading {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 6vw, 80px);
+  font-weight: 300;
+  color: var(--color-cream);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.ctaHeading em {
+  font-style: italic;
+  color: var(--color-gold);
+}
+
+.ctaLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--color-gold);
+  transition: color var(--duration-fast, 150ms) var(--ease-out),
+              border-color var(--duration-fast, 150ms) var(--ease-out);
+}
+
+.ctaLink:hover {
+  color: var(--color-gold);
+}
+
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — 900px (tablet)
+════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+
+  /* Hero stacks vertically: image on top, text below */
+  .hero {
+    grid-template-columns: 1fr;
+    grid-template-rows: 56vh auto;
+    min-height: auto;
+  }
+
+  .heroImageWrap {
+    /* Image row comes first on mobile */
+    order: -1;
+  }
+
+  .heroImgFade {
+    background: linear-gradient(
+      to bottom,
+      transparent 40%,
+      var(--color-espresso) 100%
+    );
+  }
+
+  .heroDark {
+    justify-content: flex-start;
+  }
+
+  .heroText {
+    padding: clamp(32px, 5vh, 48px) clamp(24px, 6vw, 48px) clamp(48px, 7vh, 72px);
+    padding-top: clamp(32px, 5vh, 48px);
+  }
+
+  .heroTitle {
+    font-size: clamp(48px, 10vw, 72px);
+  }
+
+  .heroDecorNum {
+    font-size: clamp(100px, 18vw, 160px);
+    bottom: -8px;
+    right: -4px;
+  }
+
+  /* Story: single column */
+  .storyInner {
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vh, 48px);
+  }
+
+  .storyHead {
+    position: static;
+  }
+
+  .storyHeading {
+    font-size: clamp(32px, 6vw, 48px);
+  }
+
+  /* Values: 1 column */
+  .valuesGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .valueNum {
+    font-size: 64px;
+  }
+}
+
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — 600px (mobile)
+════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+
+  .hero {
+    grid-template-rows: 48vh auto;
+  }
+
+  .heroTitle {
+    font-size: clamp(42px, 11vw, 60px);
+  }
+
+  .story,
+  .values,
+  .cta .ctaInner {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .storyQuote {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .quote {
+    font-size: clamp(20px, 6vw, 32px);
+  }
+
+  .statementWord {
+    font-size: clamp(56px, 16vw, 96px);
+  }
+
+  .valuesHeader {
+    margin-bottom: var(--space-10);
+  }
+
+  .ctaHeading {
+    font-size: clamp(36px, 10vw, 56px);
+  }
+
+  .ctaInner {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}

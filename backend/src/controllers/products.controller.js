@@ -209,6 +209,29 @@ export const deleteVariant = asyncHandler(async (req, res) => {
   res.json({ message: 'Variante eliminada' });
 });
 
+// GET /api/admin/colors — colores únicos registrados en todas las variantes
+export const getColors = asyncHandler(async (req, res) => {
+  const { data, error } = await supabase
+    .from('product_variants')
+    .select('color_name, color_hex')
+    .not('color_name', 'is', null)
+    .not('color_hex', 'is', null);
+  if (error) throw createError(error.message, 500);
+
+  const seenHex  = new Set();
+  const seenName = new Set();
+  const unique = (data ?? []).filter(c => {
+    const hex  = c.color_hex.toLowerCase();
+    const name = c.color_name.toLowerCase().trim();
+    if (seenHex.has(hex) || seenName.has(name)) return false;
+    seenHex.add(hex);
+    seenName.add(name);
+    return true;
+  });
+
+  res.json(unique);
+});
+
 // ── Upload imagen de colección ────────────────────────────
 
 // POST /api/admin/collections/:collectionId/image

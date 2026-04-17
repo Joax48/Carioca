@@ -6,7 +6,7 @@ import { AdminModal }             from "../../components/admin/AdminModal";
 import { AdminField, AdminInput, AdminTextarea, AdminSelect, AdminToggle }
   from "../../components/admin/AdminField";
 import { ImageGalleryEditor }     from "../../components/admin/ImageGalleryEditor";
-import { productsService, collectionsService, settingsService } from "../../services";
+import { productsService, collectionsService, settingsService, colorsService } from "../../services";
 import styles from "./AdminPage.module.css";
 
 function StatusBadge({ active }) {
@@ -121,10 +121,19 @@ export function ProductsPage() {
   const [saving,       setSaving]       = useState(false);
   const [imageItems,   setImageItems]   = useState([]);
   const [variants,     setVariants]     = useState([]);
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [search,       setSearch]       = useState("");
+  const [savedColors,     setSavedColors]     = useState([]);
+  const [deleteTarget,    setDeleteTarget]    = useState(null);
+  const [search,          setSearch]          = useState("");
+  const [filterCollection, setFilterCollection] = useState("");
+  const [filterStatus,    setFilterStatus]    = useState("");
+  const [page,            setPage]            = useState(0);
 
-  useEffect(() => { loadData(); }, []);
+  const PAGE_SIZE = 20;
+
+  useEffect(() => {
+    loadData();
+    colorsService.getAll().then(setSavedColors).catch(() => {});
+  }, []);
 
   async function loadData() {
     setLoading(true);
@@ -288,7 +297,19 @@ export function ProductsPage() {
     } catch (err) { console.error(err); }
   }
 
-  const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = products.filter(p => {
+    if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
+    if (filterCollection && String(p.collection?.id) !== filterCollection) return false;
+    if (filterStatus === "active" && !p.is_active) return false;
+    if (filterStatus === "draft" && p.is_active) return false;
+    return true;
+  });
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated  = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  function resetPage() { setPage(0); }
+
   const columns  = COLUMNS.map(col =>
     col.key === "_actions"
       ? { ...col, render: (_, row) => col.render(_, row, openEdit, setDeleteTarget, handleFeature) }
@@ -311,11 +332,44 @@ export function ProductsPage() {
         <div className={styles.searchWrap}>
           <IconSearch />
           <input className={styles.searchInput} placeholder="Buscar producto..."
-            value={search} onChange={e => setSearch(e.target.value)} />
+            value={search} onChange={e => { setSearch(e.target.value); resetPage(); }} />
         </div>
+        <select
+          className={styles.filterSelect}
+          value={filterCollection}
+          onChange={e => { setFilterCollection(e.target.value); resetPage(); }}
+        >
+          <option value="">Todas las colecciones</option>
+          {collections.map(c => <option key={c.id} value={String(c.id)}>{c.name}</option>)}
+        </select>
+        <select
+          className={styles.filterSelect}
+          value={filterStatus}
+          onChange={e => { setFilterStatus(e.target.value); resetPage(); }}
+        >
+          <option value="">Todos los estados</option>
+          <option value="active">Activos</option>
+          <option value="draft">Borradores</option>
+        </select>
       </div>
 
-      <AdminTable columns={columns} rows={filtered} loading={loading} onRowClick={openEdit} />
+      <AdminTable columns={columns} rows={paginated} loading={loading} onRowClick={openEdit} />
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            className={styles.pageBtn}
+            onClick={() => setPage(p => p - 1)}
+            disabled={page === 0}
+          >← Anterior</button>
+          <span className={styles.pageInfo}>{page + 1} / {totalPages}</span>
+          <button
+            className={styles.pageBtn}
+            onClick={() => setPage(p => p + 1)}
+            disabled={page >= totalPages - 1}
+          >Siguiente →</button>
+        </div>
+      )}
 
       <AdminModal open={modalOpen} onClose={() => setModalOpen(false)}
         title={editing ? `Editar: ${editing.name}` : "Nuevo producto"}>
@@ -358,6 +412,39 @@ export function ProductsPage() {
           <p style={{ fontSize: 11, color: "var(--adm-text-3)", marginTop: -8 }}>
             Cada color tiene su propio inventario por talla. 0 = agotado en esa talla.
           </p>
+
+          {/* Paleta de colores guardados */}
+          {savedColors.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, padding: "8px 10px", background: "var(--adm-surface-2)", borderRadius: 6, border: "0.5px solid var(--adm-border)" }}>
+              <span style={{ fontSize: 10, color: "var(--adm-text-3)", width: "100%", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Colores guardados — hacé clic para agregar
+              </span>
+              {savedColors.map((c, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  title={c.color_name}
+                  onClick={() => {
+                    const alreadyAdded = variants.some(v => v.color_hex?.toLowerCase() === c.color_hex?.toLowerCase());
+                    if (!alreadyAdded) {
+                      setVariants(prev => [...prev, { color_name: c.color_name, color_hex: c.color_hex, in_stock: true, sizes: EMPTY_SIZES() }]);
+                    }
+                  }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 5,
+                    background: "var(--adm-surface)", border: "0.5px solid var(--adm-border)",
+                    borderRadius: 20, padding: "3px 8px 3px 4px",
+                    cursor: "pointer", fontSize: 11, color: "var(--adm-text-2)",
+                    opacity: variants.some(v => v.color_hex?.toLowerCase() === c.color_hex?.toLowerCase()) ? 0.35 : 1,
+                  }}
+                >
+                  <span style={{ width: 14, height: 14, borderRadius: "50%", background: c.color_hex, border: "1px solid rgba(0,0,0,0.1)", display: "inline-block", flexShrink: 0 }} />
+                  {c.color_name}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {variants.map((v, i) => {
               const updateV = (patch) =>

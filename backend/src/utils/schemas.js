@@ -53,7 +53,7 @@ export const orderSchema = z.object({
 
 // ── Estado de pedido ──────────────────────────────────────
 export const orderStatusSchema = z.object({
-  status:      z.enum(['pending', 'confirmed', 'shipped', 'completed', 'cancelled']),
+  status:      z.enum(['pending', 'confirmed', 'ready', 'shipped', 'completed', 'cancelled']),
   admin_notes: z.string().max(500).optional(),
 });
 

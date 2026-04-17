@@ -95,7 +95,7 @@ export function Footer() {
 
         {/* ── CTA column ── */}
         <div className={styles.ctaCol}>
-          <a href="#nosotros" className={styles.cta}>
+          <a href="/nosotros" className={styles.cta}>
             Conócenos →
           </a>
         </div>

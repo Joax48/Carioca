@@ -128,7 +128,26 @@ export async function sendOrderConfirmed({ to, customerName, orderId, deliveryMe
   });
 }
 
-// ── 3. Pedido enviado (en camino) ───────────────────────
+// ── 3a. Pedido listo para retirar en tienda ──────────────
+export async function sendOrderReadyForPickup({ to, customerName, orderId }) {
+  const html = baseTemplate('¡Tu pedido está listo para retirar!', `
+    <p>Hola <strong>${customerName}</strong>,</p>
+    <p>📍 Tu pedido <strong>#${orderId.slice(0,8).toUpperCase()}</strong> ya está listo para ser retirado en nuestra tienda en <strong>Pozos de Santa Ana</strong>.</p>
+    <p>Podés pasar cuando gustés. Si necesitás coordinar un horario, respondé este correo o escribinos por Instagram.</p>
+    <p style="font-size:13px;color:#888;">
+      Recordá traer el número de tu pedido al retirar.
+    </p>
+  `);
+
+  return transporter.sendMail({
+    from:    process.env.EMAIL_FROM,
+    to,
+    subject: `Carioca · ¡Tu pedido #${orderId.slice(0,8).toUpperCase()} está listo para retirar! 📍`,
+    html,
+  });
+}
+
+// ── 3b. Pedido enviado por mensajería (en camino) ────────
 export async function sendOrderShipped({ to, customerName, orderId }) {
   const html = baseTemplate('¡Tu pedido está en camino!', `
     <p>Hola <strong>${customerName}</strong>,</p>

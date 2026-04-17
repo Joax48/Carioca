@@ -5,7 +5,6 @@
 }
 
 .inner {
-  max-width: 960px;
   padding-inline: var(--section-px);
 }
 
@@ -14,15 +13,16 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: var(--space-12);
+  margin-bottom: var(--space-10);
 }
 
 .heading {
   font-family: var(--font-body);
-  font-size: clamp(32px, 5vw, 46px);
-  font-weight: var(--weight-medium);
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: var(--weight-semi);
   letter-spacing: var(--tracking-tight);
   color: var(--color-espresso);
+  line-height: 1;
 }
 
 .nav {
@@ -36,22 +36,50 @@
   pointer-events: none;
 }
 
-/* ── Cards grid ── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-5);
+/* ── Carousel ── */
+.viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   align-items: stretch;
 }
 
-/* ── Entrance animation on slide ── */
-.item {
-  animation: cardEnter var(--duration-slow) var(--ease-out) both;
+.slide {
+  flex: 0 0 calc(100% / var(--visible, 3));
+  padding-right: var(--space-5);
+  box-sizing: border-box;
 }
 
-@keyframes cardEnter {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0);    }
+/* ── Dots ── */
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-espresso);
+  opacity: 0.2;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s, width 0.2s;
+}
+
+.dotActive {
+  opacity: 1;
+  width: 20px;
 }
 
 /* ── Empty state ── */
@@ -104,14 +132,7 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr 1fr; }
-  .item:last-child { display: none; }
-}
-
 @media (max-width: 560px) {
   .section { padding-inline: var(--space-6); }
-  .grid { grid-template-columns: 1fr; }
-  .item:not(:first-child) { display: none; }
   .heading { font-size: 28px; }
 }

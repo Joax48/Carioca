@@ -6,6 +6,7 @@ import { asyncHandler, createError } from '../middleware/error.middleware.js';
 import {
   sendOrderReceived,
   sendOrderConfirmed,
+  sendOrderReadyForPickup,
   sendOrderShipped,
   sendOrderCompleted,
 } from '../services/email.service.js';
@@ -77,8 +78,9 @@ export const createOrder = asyncHandler(async (req, res) => {
       customer_name:       validated.customer_name,
       customer_email:      validated.customer_email,
       customer_phone:      validated.customer_phone,
-      shipping_address:    validated.shipping_address ?? null,
-      city:                validated.city ?? null,
+      delivery_method,
+      shipping_address:    validated.shipping_address ?? (delivery_method === 'pickup' ? 'Retiro en tienda' : null),
+      city:                validated.city ?? (delivery_method === 'pickup' ? 'Retiro en tienda' : null),
       notes:               validated.notes ?? null,
       sinpe_phone:         validated.sinpe_phone ?? null,
       subtotal,
@@ -211,18 +213,18 @@ export const getOrder = asyncHandler(async (req, res) => {
 export const updateOrderStatus = asyncHandler(async (req, res) => {
   const { status, admin_notes } = orderStatusSchema.parse(req.body);
 
-  // Campos extra según el nuevo estado
-  const extra = {};
-  if (status === 'confirmed') extra.sinpe_confirmed_at = new Date().toISOString();
+  const updateData = { status };
+  if (admin_notes !== undefined) updateData.admin_notes = admin_notes;
+  if (status === 'confirmed') updateData.sinpe_confirmed_at = new Date().toISOString();
 
   const { data: order, error } = await supabase
     .from('orders')
-    .update({ status, admin_notes, ...extra })
+    .update(updateData)
     .eq('id', req.params.id)
     .select()
     .single();
 
-  if (error || !order) throw createError('Pedido no encontrado', 404);
+  if (error || !order) throw createError(error?.message ?? 'Pedido no encontrado', 404);
 
   // Disparar emails según estado
   if (status === 'confirmed') {
@@ -234,7 +236,15 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
     }).catch(err => console.error('[Email] sendOrderConfirmed falló:', err.message));
   }
 
-  if (status === 'shipped') {
+  if (status === 'ready') {
+    await sendOrderReadyForPickup({
+      to:           order.customer_email,
+      customerName: order.customer_name,
+      orderId:      order.id,
+    }).catch(err => console.error('[Email] sendOrderReadyForPickup falló:', err.message));
+  }
+
+  if (status === 'shipped' && order.delivery_method !== 'pickup') {
     await sendOrderShipped({
       to:           order.customer_email,
       customerName: order.customer_name,

@@ -9,10 +9,10 @@ import { Footer }  from '../components/layout/Footer';
 import { api }     from '../services/api.client.js';
 import styles from './ContactPage.module.css';
 
-const WHATSAPP = '50688888888'; // replace with real number
-const EMAIL    = 'hola@carioca.cr';
-const LOCATION = 'Pozos de Santa Ana, San José, Costa Rica';
-const INSTAGRAM = 'https://instagram.com/carioca.cr';
+const WHATSAPP = '50672939849';
+const EMAIL    = 'cariocawear.cr@gmail.com';
+const LOCATION = 'Pozos de Santa Ana, Costa Rica';
+const INSTAGRAM = 'https://www.instagram.com/carioca_practice_wear';
 
 export function ContactPage() {
   const [form,    setForm]    = useState({ name: '', email: '', subject: '', message: '' });
@@ -92,7 +92,7 @@ export function ContactPage() {
                   rel="noopener noreferrer"
                   className={styles.infoLink}
                 >
-                  @carioca.cr →
+                  @carioca_practice_wear →
                 </a>
               </div>
 

@@ -81,7 +81,7 @@ export function ProfilePage() {
                     isAdmin ? 'Administrador' : isClient ? 'Cliente' : 'Usuario'
                   } />
                   {isClient && (
-                    <InfoRow label="Descuento fidelidad" value="10% en todos los pedidos" highlight />
+                    <InfoRow label="Descuento fidelidad" value="5% en todos los pedidos" highlight />
                   )}
                   <InfoRow label="Método de acceso" value="Google" />
                 </div>
@@ -94,7 +94,7 @@ export function ProfilePage() {
                   <div>
                     <p className={styles.benefitsTitle}>Beneficios de cliente registrada</p>
                     <p className={styles.benefitsSub}>
-                      Disfrutás de un <strong>10% de descuento automático</strong> en todos tus pedidos.
+                      Disfrutás de un <strong>5% de descuento automático</strong> en todos tus pedidos.
                       El descuento se aplica al confirmar tu compra.
                     </p>
                   </div>
@@ -108,7 +108,7 @@ export function ProfilePage() {
                   <IconBag />
                   <p className={styles.ordersEmptyText}>
                     Para consultar el estado de tus pedidos, escribinos a{' '}
-                    <a href="mailto:hola@carioca.cr" className={styles.emailLink}>hola@carioca.cr</a>{' '}
+                    <a href="mailto:cariocawear.cr@gmail.com" className={styles.emailLink}>cariocawear.cr@gmail.com</a>{' '}
                     con tu correo de compra.
                   </p>
                   <a href="/catalogo" className={styles.shopBtn}>

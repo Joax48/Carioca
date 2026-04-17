@@ -48,7 +48,6 @@ export function CollectionsSection() {
   return (
     <section id="colecciones" className={styles.section} aria-label="Comprar por colección">
       <div ref={headerRef} className={`reveal ${styles.header}`}>
-        <SectionLabel>Comprar por</SectionLabel>
         <h2 className={styles.heading}>COLECCIÓN</h2>
       </div>
 

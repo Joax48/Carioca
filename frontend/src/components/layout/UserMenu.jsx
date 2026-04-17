@@ -68,7 +68,7 @@ export function UserMenu() {
             <div className={styles.guestPanel}>
               <p className={styles.guestTitle}>Iniciá sesión</p>
               <p className={styles.guestSub}>
-                Obtenés un <strong>10% de descuento</strong> automático en todas tus compras.
+                Obtenés un <strong>5% de descuento</strong> automático en todas tus compras.
               </p>
               <button className={styles.googleBtn} onClick={handleLogin}>
                 <IconGoogle />

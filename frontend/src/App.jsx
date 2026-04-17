@@ -21,6 +21,8 @@ import { ContactPage }          from './pages/ContactPage';
 import { ProfilePage }          from './pages/ProfilePage';
 import { BlogPage }             from './pages/BlogPage';
 import { BlogPostPage }         from './pages/BlogPostPage';
+import { AboutPage }            from './pages/AboutPage';
+import { SizeGuidePage }        from './pages/SizeGuidePage';
 
 // Admin CMS
 import { LoginPage }            from './pages/admin/LoginPage';
@@ -56,6 +58,8 @@ export function App() {
         <Route path="/mi-cuenta"         element={<ProfilePage />} />
         <Route path="/blog"              element={<BlogPage />} />
         <Route path="/blog/:slug"        element={<BlogPostPage />} />
+        <Route path="/nosotros"          element={<AboutPage />} />
+        <Route path="/guia-de-tallas"    element={<SizeGuidePage />} />
 
         {/* ── Admin CMS ── */}
         <Route path="/admin/login" element={<LoginPage />} />

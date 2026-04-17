@@ -64,6 +64,56 @@
 
 .searchInput::placeholder { color: var(--adm-text-3); }
 
+.filterSelect {
+  font-family: var(--adm-font-body);
+  font-size: 13px;
+  color: var(--adm-text);
+  background: var(--adm-surface-2);
+  border: 0.5px solid var(--adm-border);
+  border-radius: 4px;
+  padding: 0 10px;
+  height: 38px;
+  outline: none;
+  cursor: pointer;
+}
+
+.filterSelect:focus { border-color: var(--adm-gold); }
+
+/* ── Pagination ── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 0 4px;
+}
+
+.pageBtn {
+  font-family: var(--adm-font-body);
+  font-size: 12px;
+  color: var(--adm-text-2);
+  background: var(--adm-surface-2);
+  border: 0.5px solid var(--adm-border);
+  border-radius: 4px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--adm-gold);
+  color: var(--adm-text);
+}
+
+.pageBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.pageInfo {
+  font-size: 12px;
+  color: var(--adm-text-3);
+  min-width: 60px;
+  text-align: center;
+}
+
 /* ── Buttons ── */
 .btnPrimary {
   display: inline-flex;

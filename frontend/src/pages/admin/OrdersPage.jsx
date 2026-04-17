@@ -10,28 +10,36 @@ import styles from './AdminPage.module.css';
 
 /* ── Constantes ────────────────────────────────── */
 const STATUS_CONFIG = {
-  pending:   { label: 'Pendiente',  bg: 'var(--adm-amber-bg)',              color: 'var(--adm-amber)' },
-  confirmed: { label: 'Confirmado', bg: 'var(--adm-blue-bg)',               color: 'var(--adm-blue)'  },
-  shipped:   { label: 'Enviado',    bg: 'rgba(107, 191, 201, 0.12)',        color: '#6BBFC9'          },
-  completed: { label: 'Completado', bg: 'var(--adm-green-bg)',              color: 'var(--adm-green)' },
-  cancelled: { label: 'Cancelado',  bg: 'rgba(200, 168, 130, 0.08)',        color: 'var(--adm-text-3)'},
+  pending:   { label: 'Pendiente',           bg: 'var(--adm-amber-bg)',       color: 'var(--adm-amber)' },
+  confirmed: { label: 'Confirmado',          bg: 'var(--adm-blue-bg)',        color: 'var(--adm-blue)'  },
+  ready:     { label: 'Listo para retirar',  bg: 'rgba(107, 191, 201, 0.12)', color: '#6BBFC9'          },
+  shipped:   { label: 'Enviado',             bg: 'rgba(107, 191, 201, 0.12)', color: '#6BBFC9'          },
+  completed: { label: 'Completado',          bg: 'var(--adm-green-bg)',       color: 'var(--adm-green)' },
+  cancelled: { label: 'Cancelado',           bg: 'rgba(200, 168, 130, 0.08)', color: 'var(--adm-text-3)'},
 };
 
-const STATUS_TRANSITIONS = {
-  pending:   ['confirmed', 'cancelled'],
-  confirmed: ['shipped',   'cancelled'],
-  shipped:   ['completed', 'cancelled'],
-  completed: [],
-  cancelled: [],
-};
+// Transiciones según estado actual y método de entrega
+function getTransitions(status, deliveryMethod) {
+  const isPickup = deliveryMethod === 'pickup';
+  if (status === 'confirmed') return isPickup ? ['ready', 'cancelled'] : ['shipped', 'cancelled'];
+  const map = {
+    pending:   ['confirmed', 'cancelled'],
+    ready:     ['completed', 'cancelled'],
+    shipped:   ['completed', 'cancelled'],
+    completed: [],
+    cancelled: [],
+  };
+  return map[status] ?? [];
+}
 
 const STATUS_FILTERS = [
-  { value: '',          label: 'Todos'      },
-  { value: 'pending',   label: 'Pendientes' },
-  { value: 'confirmed', label: 'Confirmados'},
-  { value: 'shipped',   label: 'Enviados'   },
-  { value: 'completed', label: 'Completados'},
-  { value: 'cancelled', label: 'Cancelados' },
+  { value: '',          label: 'Todos'              },
+  { value: 'pending',   label: 'Pendientes'         },
+  { value: 'confirmed', label: 'Confirmados'        },
+  { value: 'ready',     label: 'Listos p/ retirar'  },
+  { value: 'shipped',   label: 'Enviados'           },
+  { value: 'completed', label: 'Completados'        },
+  { value: 'cancelled', label: 'Cancelados'         },
 ];
 
 const fmt      = n  => `₡${Number(n).toLocaleString('es-CR')}`;
@@ -68,6 +76,19 @@ const COLUMNS = [
   {
     key: 'customer_email', label: 'Correo',
     render: v => <span style={{ fontSize: 12, color: 'var(--adm-text-2)' }}>{v}</span>,
+  },
+  {
+    key: 'delivery_method', label: 'Tipo', width: 80,
+    render: v => (
+      <span style={{
+        fontSize: 10, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase',
+        padding: '2px 8px', borderRadius: 999,
+        background: v === 'pickup' ? 'rgba(107,191,201,0.12)' : 'var(--adm-gold-dim)',
+        color:      v === 'pickup' ? '#6BBFC9'                 : 'var(--adm-gold)',
+      }}>
+        {v === 'pickup' ? 'Retiro' : 'Envío'}
+      </span>
+    ),
   },
   { key: 'city', label: 'Ciudad', width: 120 },
   {
@@ -149,7 +170,7 @@ export function OrdersPage() {
     }
   }
 
-  const transitions = STATUS_TRANSITIONS[detail?.status ?? 'pending'] ?? [];
+  const transitions = getTransitions(detail?.status ?? 'pending', detail?.delivery_method);
 
   return (
     <div className={styles.page}>

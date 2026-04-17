@@ -16,6 +16,7 @@ export function IconButton({
   dark     = false,
   bordered = false,
   className = '',
+  as: Tag  = 'button',
   ...props
 }) {
   const classes = [
@@ -26,8 +27,8 @@ export function IconButton({
   ].filter(Boolean).join(' ');
 
   return (
-    <button className={classes} aria-label={label} {...props}>
+    <Tag className={classes} aria-label={label} {...props}>
       {children}
-    </button>
+    </Tag>
   );
 }

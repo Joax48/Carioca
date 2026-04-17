@@ -13,6 +13,7 @@ import {
   uploadProductImages, deleteProductImage, updateProductImage,
   createVariant, updateVariant, deleteVariant,
   uploadCollectionImage,
+  getColors,
 } from '../controllers/products.controller.js';
 
 import { getCollections, getCollection,
@@ -85,6 +86,7 @@ router.patch ('/admin/products/images/:imageId',    requireAdmin, updateProductI
 router.delete('/admin/products/images/:imageId',    requireAdmin, deleteProductImage);
 
 // Variantes de color
+router.get   ('/admin/colors',                       requireAdmin, getColors);
 router.post  ('/admin/products/:productId/variants', requireAdmin, createVariant);
 router.patch ('/admin/products/variants/:variantId', requireAdmin, updateVariant);
 router.delete('/admin/products/variants/:variantId', requireAdmin, deleteVariant);

@@ -30,10 +30,17 @@ export function BlogAdminPage() {
   useEffect(() => { load(); }, []);
 
   function openNew()  { setEditing({ ...EMPTY_POST }); setCoverFile(null); setCoverPreview(''); }
-  function openEdit(p) {
-    setEditing({ ...p, tags: (p.tags ?? []).join(', ') });
+  async function openEdit(p) {
     setCoverFile(null);
     setCoverPreview(p.cover_url ?? '');
+    setError('');
+    try {
+      const full = await blogService.getOneAdmin(p.id);
+      setEditing({ ...full, tags: (full.tags ?? []).join(', ') });
+      setCoverPreview(full.cover_url ?? '');
+    } catch (e) {
+      setError(e.message);
+    }
   }
   function closeEditor() { setEditing(null); setError(''); }
 

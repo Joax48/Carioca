@@ -98,6 +98,9 @@ export function ProductPage() {
   const [colorError,    setColorError]    = useState(false);
 
   const hasVariants = (product?.variants?.length ?? 0) > 0;
+  const hasSizes    = hasVariants
+    ? product.variants.some(v => Object.keys(v.sizes ?? {}).length > 0)
+    : Object.keys(product?.sizes ?? {}).length > 0;
 
   /* Variante seleccionada (para su sizes map) */
   const selectedVariant = useMemo(() =>
@@ -150,7 +153,7 @@ export function ProductPage() {
       setTimeout(() => setColorError(false), 2000);
       ok = false;
     }
-    if (!selectedSize) {
+    if (hasSizes && !selectedSize) {
       setSizeError(true);
       setTimeout(() => setSizeError(false), 2000);
       ok = false;
@@ -271,6 +274,7 @@ export function ProductPage() {
               )}
 
               {/* Selector de talla */}
+              {hasSizes && (
               <div className={sizeError ? styles.sizeErrorShake : ''}>
                 <SizeSelector
                   sizes={availableSizes}
@@ -283,8 +287,9 @@ export function ProductPage() {
                   </p>
                 )}
               </div>
+              )}
 
-              <div className={styles.divider} />
+              {(hasVariants || hasSizes) && <div className={styles.divider} />}
 
               {/* Cantidad */}
               <div className={styles.quantityRow}>

@@ -1,11 +1,7 @@
-/* ─────────────────────────────────────────
-   FeaturedBanner — hero full-bleed con gradiente
-───────────────────────────────────────── */
-
 import { useState, useEffect } from 'react';
-import { useScrollReveal }     from '../../hooks/useScrollReveal';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { Button, SectionLabel } from '../ui';
-import { settingsService }     from '../../services';
+import { settingsService } from '../../services';
 import styles from './FeaturedBanner.module.css';
 
 export function FeaturedBanner() {
@@ -20,28 +16,17 @@ export function FeaturedBanner() {
 
   if (!product) return null;
 
-  const image = product.images?.find(i => i.is_primary) ?? product.images?.[0];
   const price = `₡${Number(product.price).toLocaleString('es-CR')}`;
+  const image = product.images?.find(img => img.is_primary) ?? product.images?.[0];
+  const hasImage = Boolean(image);
 
   return (
     <section
-      className={styles.banner}
+      className={`${styles.banner} ${hasImage ? styles.split : styles.centered}`}
       aria-label={`Producto destacado: ${product.name}`}
       ref={ref}
     >
-      {/* ── Imagen de fondo ── */}
-      <div className={styles.image} aria-hidden="true">
-        {image
-          ? <img src={image.url} alt={image.alt_text ?? product.name} className={styles.img} />
-          : <div className={styles.imageFallback} />
-        }
-      </div>
-
-      {/* ── Gradiente overlay ── */}
-      <div className={styles.gradient} aria-hidden="true" />
-
-      {/* ── Copy ── */}
-      <div className={styles.copy}>
+      <div className={styles.content}>
         <SectionLabel dark>Destacado</SectionLabel>
 
         <h2 className={styles.heading}>{product.name}</h2>
@@ -50,12 +35,24 @@ export function FeaturedBanner() {
           <p className={styles.body}>{product.description}</p>
         )}
 
-        <p className={styles.price}>{price}</p>
-
-        <Button href={`/productos/${product.slug}`} variant="primary" dark>
-          Comprar ahora
-        </Button>
+        <div className={styles.footer}>
+          <span className={styles.price}>{price}</span>
+          <Button href={`/productos/${product.slug}`} variant="primary" dark>
+            Comprar ahora
+          </Button>
+        </div>
       </div>
+
+      {hasImage && (
+        <div className={styles.imageWrap}>
+          <img
+            src={image.url}
+            alt={image.alt_text || product.name}
+            className={styles.image}
+          />
+          <div className={styles.imageOverlay} />
+        </div>
+      )}
     </section>
   );
 }

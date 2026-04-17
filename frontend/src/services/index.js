@@ -107,6 +107,11 @@ export const blogService = {
   },
 };
 
+// ── Colores registrados ───────────────────────────────────
+export const colorsService = {
+  getAll: () => api.get('/admin/colors'),
+};
+
 // ── Producto destacado ────────────────────────────────────
 export const settingsService = {
   getFeatured: () => api.get('/products/featured'),

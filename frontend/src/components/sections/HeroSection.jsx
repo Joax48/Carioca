@@ -7,6 +7,8 @@
 import { Button, SectionLabel } from '../ui';
 import styles from './HeroSection.module.css';
 
+const HERO_VIDEO = import.meta.env.VITE_HERO_VIDEO_URL || '/videos/hero.mp4';
+
 export function HeroSection() {
   return (
     <section className={styles.hero} aria-label="Inicio">
@@ -14,7 +16,7 @@ export function HeroSection() {
       {/* ── Video de fondo (ocupa toda la sección) ── */}
       <video
         className={styles.videoBg}
-        src="/videos/hero.mp4"
+        src={HERO_VIDEO}
         autoPlay
         loop
         muted

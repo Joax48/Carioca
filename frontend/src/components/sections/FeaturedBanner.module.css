@@ -1,85 +1,67 @@
-/* ── FeaturedBanner — full-bleed hero con overlay de gradiente ── */
+/* ── FeaturedBanner — editorial split / dark band ── */
 
 .banner {
-  position: relative;
   margin-inline: var(--section-px);
   margin-bottom: var(--section-py);
   border-radius: var(--radius-md);
+  background: var(--color-espresso);
   overflow: hidden;
-  height: clamp(280px, 26vw, 420px);
+  min-height: 400px;
+  max-height: 940px;
 }
 
-/* ── Imagen de fondo ── */
-.image {
-  position: absolute;
-  inset: 0;
+/* ── Split layout (with image) ── */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
-.img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-  transition: transform 700ms var(--ease-default);
+/* ── Centered layout (no image) ── */
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(32px, 4vw, 48px) clamp(32px, 4vw, 56px);
+  text-align: center;
 }
 
-.banner:hover .img {
-  transform: scale(1.04);
+.centered .content {
+  align-items: center;
+  max-width: 560px;
 }
 
-.imageFallback {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #3a2a1e 0%, #5a4030 100%);
-}
-
-/* ── Gradiente overlay ── */
-.gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(26, 18, 11, 0.97) 0%,
-    rgba(26, 18, 11, 0.88) 30%,
-    rgba(26, 18, 11, 0.55) 55%,
-    rgba(26, 18, 11, 0.10) 78%,
-    transparent 100%
-  );
-}
-
-/* ── Copy ── */
-.copy {
-  position: relative;
-  z-index: 1;
-  width: 48%;
-  max-width: 480px;
-  height: 100%;
-  padding: 40px 48px;
+/* ── Content pane ── */
+.content {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  gap: 0;
+  padding: clamp(32px, 4vw, 48px) clamp(32px, 4vw, 56px);
 }
 
 .heading {
   font-family: var(--font-display);
-  font-size: clamp(26px, 2.8vw, 48px);
+  font-size: clamp(28px, 3vw, 48px);
   font-weight: var(--weight-light);
   font-style: italic;
-  line-height: 1.12;
+  line-height: var(--leading-tight);
   color: var(--color-cream);
-  margin-bottom: var(--space-3);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .body {
   font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: rgba(250, 248, 245, 0.60);
+  color: var(--color-white-60);
   line-height: var(--leading-relaxed);
-  max-width: 260px;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-10);
+  max-width: 380px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
 }
 
 .price {
@@ -87,37 +69,60 @@
   font-size: var(--text-md);
   font-weight: var(--weight-light);
   color: var(--color-gold);
-  margin-bottom: var(--space-5);
+}
+
+/* ── Image pane ── */
+.imageWrap {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.banner:hover .image {
+  transform: scale(1.03);
+}
+
+/* Left-edge gradient so the image fades into the dark content */
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--color-espresso) 0%, transparent 30%);
+  pointer-events: none;
 }
 
 /* ── Responsive ── */
-@media (max-width: 960px) {
-  .banner { height: clamp(240px, 32vw, 360px); }
-  .copy   { width: 55%; padding: 32px 36px; }
+@media (max-width: 860px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .imageWrap {
+    height: 220px;
+    order: -1;
+  }
+
+  .imageOverlay {
+    background: linear-gradient(to bottom, transparent 60%, var(--color-espresso) 100%);
+  }
 }
 
 @media (max-width: 640px) {
   .banner {
     margin-inline: var(--space-5);
-    height: 380px;
   }
-  .gradient {
-    background: linear-gradient(
-      to top,
-      rgba(26, 18, 11, 0.97) 0%,
-      rgba(26, 18, 11, 0.85) 40%,
-      rgba(26, 18, 11, 0.30) 70%,
-      transparent 100%
-    );
-  }
-  .copy {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    padding: 28px 24px;
-    justify-content: flex-end;
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
   }
 }

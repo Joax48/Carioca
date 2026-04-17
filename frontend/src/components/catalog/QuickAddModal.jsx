@@ -15,6 +15,9 @@ export function QuickAddModal({ product, onClose }) {
   const { addItem, open: openCart } = useCart();
 
   const hasVariants  = (product?.variants?.length ?? 0) > 0;
+  const hasSizes     = hasVariants
+    ? product.variants.some(v => Object.keys(v.sizes ?? {}).length > 0)
+    : Object.keys(product?.sizes ?? {}).length > 0;
   const primaryImage = product?.images?.find(i => i.is_primary) ?? product?.images?.[0];
 
   const [selectedColor, setSelectedColor] = useState(null);
@@ -68,7 +71,7 @@ export function QuickAddModal({ product, onClose }) {
       setTimeout(() => setColorError(false), 1800);
       ok = false;
     }
-    if (!selectedSize) {
+    if (hasSizes && !selectedSize) {
       setSizeError(true);
       setTimeout(() => setSizeError(false), 1800);
       ok = false;
@@ -133,36 +136,38 @@ export function QuickAddModal({ product, onClose }) {
             )}
 
             {/* Talla */}
-            <div className={sizeError ? styles.shakeError : ''}>
-              <div className={styles.sizeHeader}>
-                <span className={styles.sizeLabel}>
-                  Talla{selectedSize && <span className={styles.sizeSelected}> — {selectedSize}</span>}
-                </span>
-                <a href="/guia-de-tallas" className={styles.sizeGuide} tabIndex={-1}>
-                  Guía de tallas
-                </a>
+            {hasSizes && (
+              <div className={sizeError ? styles.shakeError : ''}>
+                <div className={styles.sizeHeader}>
+                  <span className={styles.sizeLabel}>
+                    Talla{selectedSize && <span className={styles.sizeSelected}> — {selectedSize}</span>}
+                  </span>
+                  <a href="/guia-de-tallas" className={styles.sizeGuide} tabIndex={-1}>
+                    Guía de tallas
+                  </a>
+                </div>
+                <div className={styles.sizeGrid}>
+                  {availableSizes.map(size => (
+                    <button
+                      key={size.label}
+                      disabled={!size.available}
+                      onClick={() => { setSelectedSize(size.label); setSizeError(false); }}
+                      className={[
+                        styles.sizeBtn,
+                        selectedSize === size.label && styles.sizeBtnActive,
+                        !size.available && styles.sizeBtnOut,
+                      ].filter(Boolean).join(' ')}
+                      aria-pressed={selectedSize === size.label}
+                      aria-label={`${size.label}${!size.available ? ' — agotada' : ''}`}
+                    >
+                      {size.label}
+                      {!size.available && <span className={styles.sizeBtnSlash} aria-hidden="true" />}
+                    </button>
+                  ))}
+                </div>
+                {sizeError && <p className={styles.errorMsg}>Seleccioná una talla</p>}
               </div>
-              <div className={styles.sizeGrid}>
-                {availableSizes.map(size => (
-                  <button
-                    key={size.label}
-                    disabled={!size.available}
-                    onClick={() => { setSelectedSize(size.label); setSizeError(false); }}
-                    className={[
-                      styles.sizeBtn,
-                      selectedSize === size.label && styles.sizeBtnActive,
-                      !size.available && styles.sizeBtnOut,
-                    ].filter(Boolean).join(' ')}
-                    aria-pressed={selectedSize === size.label}
-                    aria-label={`${size.label}${!size.available ? ' — agotada' : ''}`}
-                  >
-                    {size.label}
-                    {!size.available && <span className={styles.sizeBtnSlash} aria-hidden="true" />}
-                  </button>
-                ))}
-              </div>
-              {sizeError && <p className={styles.errorMsg}>Seleccioná una talla</p>}
-            </div>
+            )}
 
             {/* Cantidad */}
             <div className={styles.qtyRow}>

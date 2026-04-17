@@ -12,9 +12,9 @@ export const NAV_LINKS = [
 ];
 
 export const SOCIAL_LINKS = [
-  { label: 'WhatsApp',  href: 'https://wa.me/50688888888', type: 'whatsapp'  },
-  { label: 'Instagram', href: 'https://instagram.com/cariocacr', type: 'instagram' },
-  { label: 'Linktree',  href: 'https://linktr.ee/cariocacr', type: 'linktree'  },
+  { label: 'WhatsApp',  href: 'https://wa.me/50672939849', type: 'whatsapp'  },
+  { label: 'Instagram', href: 'https://www.instagram.com/carioca_practice_wear', type: 'instagram' },
+  { label: 'Linktree',  href: 'https://linktr.ee/Cariocapracticewear', type: 'linktree'  },
 ];
 
 export const FOOTER_NAV = [
@@ -111,9 +111,9 @@ export const TESTIMONIALS = [
 ];
 
 export const CONTACT_INFO = {
-  phone:    '8888-8888',
-  email:    'hola@carioca.cr',
-  location: 'Costa Rica',
+  phone:    '7293-9849',
+  email:    'cariocawear.cr@gmail.com',
+  location: 'Pozos de Santa Ana, Costa Rica',
 };
 
 export const FEATURED_PRODUCT = {

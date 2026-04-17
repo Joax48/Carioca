@@ -1,6 +1,4 @@
 // pages/CollectionsListPage.jsx
-// Página pública /colecciones — muestra todas las colecciones activas
-// en un grid editorial. Accesible desde el nav y el footer.
 
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useCollections }  from '../hooks/useCollections';
@@ -8,7 +6,7 @@ import { Navbar, Footer }  from '../components/layout';
 import { SectionLabel }    from '../components/ui';
 import styles from './CollectionsListPage.module.css';
 
-function CollectionHeroCard({ collection, delay = 0 }) {
+function CollectionCard({ collection, delay = 0 }) {
   const ref = useScrollReveal();
   return (
     <a
@@ -18,27 +16,13 @@ function CollectionHeroCard({ collection, delay = 0 }) {
       style={{ transitionDelay: `${delay}s` }}
       aria-label={collection.name}
     >
-      {/* Imagen de fondo */}
-      <div className={styles.cardBg}>
-        {collection.image_url
-          ? <img src={collection.image_url} alt={collection.name} className={styles.cardImg} loading="lazy" />
-          : <div className={styles.cardFallback} aria-hidden="true" />
-        }
-      </div>
+      {collection.image_url
+        ? <img src={collection.image_url} alt={collection.name} className={styles.cardImg} loading="lazy" />
+        : <div className={styles.cardFallback} aria-hidden="true" />
+      }
 
-      {/* Overlay */}
-      <div className={styles.cardOverlay} aria-hidden="true" />
-
-      {/* Contenido */}
-      <div className={styles.cardContent}>
-        <p className={styles.cardLabel}>Colección</p>
+      <div className={styles.cardInfo}>
         <h2 className={styles.cardName}>{collection.name}</h2>
-        {collection.description && (
-          <p className={styles.cardDesc}>{collection.description}</p>
-        )}
-        <span className={styles.cardCta}>
-          Ver colección →
-        </span>
       </div>
     </a>
   );
@@ -57,7 +41,6 @@ export function CollectionsListPage() {
       <Navbar />
 
       <main className={styles.page}>
-        {/* ── Hero header ── */}
         <header className={styles.hero}>
           <div ref={heroRef} className={`reveal ${styles.heroInner}`}>
             <SectionLabel>Carioca · 2026</SectionLabel>
@@ -70,16 +53,11 @@ export function CollectionsListPage() {
           </div>
         </header>
 
-        {/* ── Grid de colecciones ── */}
         <section className={styles.grid} aria-label="Todas las colecciones">
           {loading
             ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
             : collections.map((col, i) => (
-                <CollectionHeroCard
-                  key={col.id}
-                  collection={col}
-                  delay={i * 0.1}
-                />
+                <CollectionCard key={col.id} collection={col} delay={i * 0.08} />
               ))
           }
 

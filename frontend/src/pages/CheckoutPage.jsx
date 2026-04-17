@@ -50,7 +50,7 @@ export function CheckoutPage() {
   /* ── Totales ── */
   const isClient    = user?.role === 'client';
   const subtotal    = items.reduce((s, i) => s + i.product.price * i.quantity, 0);
-  const discountPct = isClient ? 10 : 0;
+  const discountPct = isClient ? 5 : 0;
   const discountAmt = Math.round(subtotal * discountPct / 100);
   const shipping    = deliveryMethod === 'courier' ? SHIPPING_COST : 0;
   const total       = subtotal - discountAmt + shipping;
@@ -84,11 +84,11 @@ export function CheckoutPage() {
     setLoading(true);
     setSubmitErr('');
     try {
-      const payload = {
-        ...form,
-        delivery_method: deliveryMethod,
-        items: toOrderItems(),
-      };
+      const raw = { ...form, delivery_method: deliveryMethod, items: toOrderItems() };
+      // Strip empty strings so Zod .optional() fields don't fail min() checks
+      const payload = Object.fromEntries(
+        Object.entries(raw).filter(([, v]) => v !== '' && v !== null && v !== undefined || Array.isArray(v))
+      );
       const res = await ordersService.create(payload);
       clear();
       setSuccess({ orderId: res.orderId, total: res.total, deliveryMethod });
@@ -143,7 +143,7 @@ export function CheckoutPage() {
                   <div className={styles.discountBanner}>
                     <IconTag />
                     <span>
-                      Como cliente registrada, tu pedido incluye un <strong>10% de descuento</strong> automático.
+                      Como cliente registrada, tu pedido incluye un <strong>5% de descuento</strong> automático.
                     </span>
                   </div>
                 )}
