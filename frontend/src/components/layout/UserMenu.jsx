@@ -28,7 +28,7 @@ export function UserMenu() {
   }, []);
 
   const handleLogin = async () => {
-    await loginWithGoogle(window.location.href);
+    await loginWithGoogle(window.location.origin);
     setOpen(false);
   };
 

@@ -10,7 +10,8 @@ export const supabase = createClient(
     auth: {
       persistSession:     true,
       autoRefreshToken:   true,
-      detectSessionInUrl: true, // detecta el hash OAuth al volver de Google
+      detectSessionInUrl: true,
+      flowType:           'implicit', // usa hash fragment en vez de PKCE — compatible con SPA
     },
   }
 );
